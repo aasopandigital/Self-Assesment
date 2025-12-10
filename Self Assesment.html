@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Ulangan Paket 1</title>
+<style>
+body { font-family: Arial, sans-serif; max-width:900px; margin:auto; padding:20px; }
+.question { margin-bottom:15px; }
+.options label { display:block; margin:5px 0; }
+#quiz-form { display:none; }
+#login { margin-bottom:20px; }
+#result { margin-top:20px; padding:10px; border:1px solid #ccc; display:none; }
+.correct { color:green; }
+.wrong { color:red; }
+</style>
+</head>
+<body>
+
+<h2>Ulangan Paket 1</h2>
+
+<div id="login">
+  <label>Nama: <input type="text" id="studentName"></label>
+  <label>Password: <input type="text" id="password"></label>
+  <button onclick="startSession()">Mulai Ulangan</button>
+  <div id="login-msg" style="color:red;"></div>
+</div>
+
+<form id="quiz-form"></form>
+
+<div id="result"></div>
+
+<script>
+// Password siswa (ubah sesuai kebutuhan)
+var correctPassword = "paket1";
+
+// Bank soal
+const questionBank = [
+  {q:"1. Apa yang Lumeria terkenal?",A:"Pertanian",B:"Perdagangan & pengetahuan",C:"Pertambangan",correct:"B"},
+  {q:"2. Apa yang membuat Arvin berbeda?",A:"Sering bepergian",B:"Sangat rajin belajar",C:"Tidak suka membaca",correct:"B"},
+  {q:"3. Apa yang Arvin temukan di perpustakaan?",A:"Peta kota",B:"Batu langka",C:"Manuskrip kuno",correct:"C"},
+  {q:"4. Apa istimewanya penemuan itu?",A:"Mengubah transportasi",B:"Membuat energi",C:"Menghasilkan makanan",correct:"A"},
+  {q:"5. Mengapa Arvin mempelajari manuskrip?",A:"Untuk dijual",B:"Membangun kembali perangkat",C:"Untuk menghancurkannya",correct:"B"},
+  {q:"6. Teks ini membahas tentang?",A:"Aktivitas olahraga Arvin",B:"Seorang siswa menemukan sesuatu penting",C:"Masalah ekonomi kota",correct:"B"},
+  {q:"7. Nada teks?",A:"Lucu",B:"Misterius",C:"Informative",correct:"C"},
+  {q:"8. Paragraf yang memperkenalkan manuskrip?",A:"1",B:"2",C:"3",correct:"C"},
+  {q:"9. Arvin 'driven by curiosity' berarti?",A:"Malas",B:"Termotivasi",C:"Bingung",correct:"B"},
+  {q:"10. Struktur teks?",A:"Orientation–Event–Resolution",B:"Identification–Description",C:"Orientation–Complication–Resolution",correct:"A"},
+  {q:"11. Kata 'dedicated' artinya?",A:"Rajin",B:"Lemah",C:"Tidak fokus",correct:"A"},
+  {q:"12. 'Manuscript' artinya?",A:"Dokumen tulisan tangan",B:"Alat musik",C:"Perjanjian hukum",correct:"A"},
+  {q:"13. Fungsi Paragraf 4?",A:"Kesimpulan",B:"Tindakan selanjutnya Arvin",C:"Memperkenalkan setting",correct:"B"},
+  {q:"14. Ide utama Paragraf 2?",A:"Arvin bekerja di perpustakaan",B:"Arvin pembelajar berdedikasi",C:"Arvin tidak suka bepergian",correct:"B"},
+  {q:"15. Penemuan diyakini bisa?",A:"Membantu petani",B:"Mengubah transportasi",C:"Meningkatkan pertanian",correct:"B"},
+  {q:"16. 'He' di Paragraf 3 menunjuk?",A:"Pustakawan",B:"Arvin",C:"Penemu",correct:"B"},
+  {q:"17. 'Forgotten invention' berarti?",A:"Dikenal banyak orang",B:"Baru dibuat",C:"Hilang di sejarah",correct:"C"},
+  {q:"18. Kota Lumeria berfungsi sebagai?",A:"Setting",B:"Masalah",C:"Solusi",correct:"A"},
+  {q:"19. Teks ditulis dalam?",A:"Past tense",B:"Present tense",C:"Future tense",correct:"A"},
+  {q:"20. 'Began studying' adalah contoh?",A:"Simple past",B:"Past continuous",C:"Present perfect",correct:"B"},
+  {q:"21. 'He spent hours in the library' menggunakan?",A:"Adverbial phrase",B:"Passive voice",C:"Modal verb",correct:"A"},
+  {q:"22. Kalimat deskriptif?",A:"Arvin menemukan penemuan.",B:"Manuskrip lama menggambarkan penemuan.",C:"Ia mempelajari manuskrip.",correct:"B"},
+  {q:"23. 'People from across the region came' menunjukkan?",A:"Kebiasaan",B:"Aksi selesai di masa lalu",C:"Kemungkinan masa depan",correct:"B"},
+  {q:"24. 'Hoping he could rebuild...' menunjukkan?",A:"Tujuan",B:"Kontras",C:"Peringatan",correct:"A"},
+  {q:"25. Kata 'carefully' jenis?",A:"Noun",B:"Adverb",C:"Adjective",correct:"B"},
+  {q:"26. Language feature teks?",A:"Dialogue",B:"Technical terms",C:"Imperative",correct:"B"},
+  {q:"27. Kalimat simple past?",A:"Arvin studies the book",B:"He discovers a manuscript",C:"He began reading the text",correct:"C"},
+  {q:"28. Struktur recount mulai dengan?",A:"Orientation",B:"Complication",C:"Reiteration",correct:"A"},
+  {q:"29. Teks menggunakan POV orang ketiga karena?",A:"Menggunakan he/his",B:"I/me",C:"You/your",correct:"A"},
+  {q:"30. Ringkasan terbaik?",A:"Arvin menemukan manuskrip dan membangun kembali penemuan.",B:"Arvin bepergian mencari bahan.",C:"Arvin membangun perpustakaan baru.",correct:"A"}
+];
+
+// Fungsi login
+function startSession() {
+  const name = document.getElementById('studentName').value;
+  const pwd = document.getElementById('password').value;
+  const msg = document.getElementById('login-msg');
+
+  if(!name || !pwd){ msg.textContent="Isi nama dan password!"; return; }
+  if(pwd !== correctPassword){ msg.textContent="Password salah!"; return; }
+
+  document.getElementById('login').style.display='none';
+  renderShuffledQuestions();
+  document.getElementById('quiz-form').style.display='block';
+}
+
+// Render soal acak
+function renderShuffledQuestions() {
+  const shuffled = [...questionBank].sort(() => Math.random() - 0.5);
+  const form = document.getElementById('quiz-form');
+  form.innerHTML = '';
+
+  shuffled.forEach((item, idx) => {
+    const n = idx + 1;
+    form.innerHTML += `
+      <div class="question">
+        <strong>${n}. ${item.q}</strong>
+        <div class="options">
+          <label><input type="radio" name="Q${n}" value="A"> A. ${item.A}</label>
+          <label><input type="radio" name="Q${n}" value="B"> B. ${item.B}</label>
+          <label><input type="radio" name="Q${n}" value="C"> C. ${item.C}</label>
+        </div>
+      </div>`;
+  });
+
+  form.innerHTML += `<button type="button" onclick="submitQuiz()">Submit Jawaban</button>`;
+}
+
+// Submit dan cek jawaban
+function submitQuiz() {
+  let score = 0;
+  const resultDiv = document.getElementById('result');
+  resultDiv.innerHTML = `<h3>Hasil Ulangan:</h3>`;
+  questionBank.forEach((item, idx) => {
+    const qNum = idx+1;
+    const radios = document.getElementsByName('Q'+qNum);
+    let selected = null;
+    radios.forEach(r => { if(r.checked) selected=r.value; });
+    if(selected === item.correct) { score++; resultDiv.innerHTML += `<p>${qNum}. <span class="correct">Benar</span></p>`; }
+    else { resultDiv.innerHTML += `<p>${qNum}. <span class="wrong">Salah (Jawaban benar: ${item.correct})</span></p>`; }
+  });
+  resultDiv.innerHTML += `<h3>Skor: ${score}/${questionBank.length}</h3>`;
+  resultDiv.style.display='block';
+  document.getElementById('quiz-form').style.display='none';
+}
+</script>
+
+</body>
+</html>
