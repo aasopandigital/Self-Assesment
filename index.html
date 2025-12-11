@@ -24,55 +24,34 @@
 
 <script>
 const questions = [
-    // 10 Narrative Text Questions
-    {text:"Narrative 1: Lily found a magical map in the forest. What did she discover?", options:["A treasure","A monster","Nothing","A friend","A bird"], answer:0},
-    {text:"Narrative 2: David explored Crystal Cave with friends. What did they find?", options:["Lost items","Glittering crystals","A snake","Waterfall","Nothing"], answer:1},
-    {text:"Narrative 3: Maria helped an old man cross the street. What is the main idea?", options:["Helping others","Running fast","Being late","Eating","Traveling"], answer:0},
-    {text:"Narrative 4: A dog followed Tom home from school. What happened?", options:["Dog ran away","Dog stayed with him","Dog got lost","Dog barked at neighbors","Dog hid"], answer:1},
-    {text:"Narrative 5: A storm hit the village at night. What is the effect?", options:["Calm weather","Flooding","Sunshine","Harvest","Vacation"], answer:1},
-    {text:"Narrative 6: Emma found a mysterious key. What could it open?", options:["A door","A window","A car","A bag","A chest"], answer:4},
-    {text:"Narrative 7: Jack built a treehouse with his friends. What skill is emphasized?", options:["Teamwork","Cooking","Reading","Swimming","Driving"], answer:0},
-    {text:"Narrative 8: Sophie read a letter from a secret admirer. How did she feel?", options:["Excited","Angry","Sad","Hungry","Sleepy"], answer:0},
-    {text:"Narrative 9: Michael learned to ride a bicycle. What lesson is learned?", options:["Persistence","Laziness","Fear","Hiding","Forgetting"], answer:0},
-    {text:"Narrative 10: A cat helped rescue kittens from a tree. What trait is highlighted?", options:["Bravery","Fear","Dishonesty","Jealousy","Laziness"], answer:0},
-
-    // 10 Recount Text Questions
-    {text:"Recount 1: Albert Einstein won the Nobel Prize in 1921. What was his achievement?", options:["Music","Physics","Painting","Cooking","Sports"], answer:1},
-    {text:"Recount 2: Eiffel Tower is a landmark in Paris. When was it built?", options:["1889","1989","1789","2000","1900"], answer:0},
-    {text:"Recount 3: Marie Curie discovered radium. What is she famous for?", options:["Science","Music","Dance","Acting","Football"], answer:0},
-    {text:"Recount 4: The Great Wall of China is long. Why was it built?", options:["Defense","Garden","House","School","Market"], answer:0},
-    {text:"Recount 5: Leonardo da Vinci painted the Mona Lisa. What is his profession?", options:["Artist","Engineer","Teacher","Chef","Doctor"], answer:0},
-    {text:"Recount 6: Mount Fuji is in Japan. Why is it popular?", options:["Tourism","Shopping","Sports","Mining","Fishing"], answer:0},
-    {text:"Recount 7: William Shakespeare wrote many plays. What is his occupation?", options:["Writer","Painter","Singer","Dancer","Teacher"], answer:0},
-    {text:"Recount 8: Niagara Falls attracts visitors. What is the main reason?", options:["Beauty","Danger","Weather","Traffic","Animals"], answer:0},
-    {text:"Recount 9: Steve Jobs co-founded Apple. What is he known for?", options:["Technology","Cooking","Music","Traveling","Sports"], answer:0},
-    {text:"Recount 10: Sydney Opera House hosts performances. What type of building is it?", options:["Theater","Hospital","School","Museum","Market"], answer:0},
-
-    // 10 Procedure Text Questions
-    {text:"Procedure 1: How to bake a cake? First, preheat oven to 180°C. What is the next step?", options:["Mix ingredients","Eat","Sleep","Watch TV","Go shopping"], answer:0},
-    {text:"Procedure 2: How to make tea? Boil water first. What comes next?", options:["Add tea leaves","Sleep","Read","Drive","Swim"], answer:0},
-    {text:"Procedure 3: How to plant a tree? Dig a hole first. What comes after?", options:["Put the tree","Buy clothes","Cook","Dance","Sleep"], answer:0},
-    {text:"Procedure 4: How to brush teeth? Put toothpaste on the brush. What next?", options:["Brush teeth","Sleep","Run","Jump","Play"], answer:0},
-    {text:"Procedure 5: How to make lemonade? Squeeze lemons. What comes next?", options:["Add water and sugar","Sleep","Eat pizza","Sing","Dance"], answer:0},
-    {text:"Procedure 6: How to tie shoelaces? Cross the laces. Then?", options:["Make loops","Eat","Sleep","Jump","Run"], answer:0},
-    {text:"Procedure 7: How to wash hands? Wet hands first. Then?", options:["Apply soap","Jump","Run","Eat","Drink"], answer:0},
-    {text:"Procedure 8: How to make a sandwich? Take two slices of bread. Then?", options:["Add fillings","Sleep","Watch TV","Drive","Cook"], answer:0},
-    {text:"Procedure 9: How to write a letter? Take a pen. Then?", options:["Write the content","Sleep","Eat","Read","Play"], answer:0},
-    {text:"Procedure 10: How to set table? Put plates first. Then?", options:["Add cutlery","Dance","Sing","Run","Jump"], answer:0}
+    // ... (isi semua 30 soal seperti sebelumnya)
 ];
+
+// Fungsi untuk mengacak array
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
 
 function startQuiz() {
     const quiz = document.getElementById("quizArea");
     quiz.classList.remove("hidden");
     quiz.innerHTML = "";
 
-    questions.forEach((q, i) => {
+    // Acak urutan soal
+    const shuffledQuestions = shuffleArray([...questions]);
+
+    shuffledQuestions.forEach((q, i) => {
         let div = document.createElement("div");
         div.className = "question";
         div.innerHTML = `<b>${i+1}. ${q.text.replace(/\n/g,'<br>')}</b><br>` +
-            q.options.map((opt, index) => `
+            shuffleArray(q.options.map((opt,index)=>({opt,index})))
+            .map(o=>`
                 <label>
-                    <input type='radio' name='q${i}' value='${index}'> ${opt}
+                    <input type='radio' name='q${i}' value='${o.index}'> ${o.opt}
                 </label><br>
             `).join('');
         quiz.appendChild(div);
