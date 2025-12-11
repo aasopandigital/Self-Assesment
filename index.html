@@ -5,57 +5,128 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Self Assessment Quiz</title>
 <style>
-    body { font-family: Arial, sans-serif; background:#f2f2f2; padding:20px; }
-    .container { max-width:900px; margin:auto; background:white; padding:20px; border-radius:10px; }
-    h1 { text-align:center; }
-    .question { margin-bottom:20px; }
-    .hidden { display:none; }
-    button { padding:10px 20px; border:none; border-radius:8px; background:#4CAF50; color:white; cursor:pointer; }
-    button:hover { background:#45a049; }
+body { font-family: Arial; background:#f2f2f2; padding:20px; }
+.container { max-width:900px; margin:auto; background:white; padding:20px; border-radius:10px; }
+h1 { text-align:center; }
+.question { margin-bottom:20px; }
+.hidden { display:none; }
+button { padding:10px 20px; border:none; border-radius:8px; background:#4CAF50; color:white; cursor:pointer; }
+button:hover { background:#45a049; }
+.score { font-weight:bold; font-size:18px; margin-top:20px; }
 </style>
 </head>
 <body>
 <div class="container">
 <h1>English Self Assessment Quiz</h1>
-<p>Read the text carefully, then answer the questions.</p>
-<button onclick="startQuiz()">Start Quiz</button>
+
+<div id="loginForm">
+  <p>Enter your Name and Password to access the quiz:</p>
+  <input type="text" id="nama" placeholder="Your Name"><br><br>
+  <input type="password" id="password" placeholder="Password"><br><br>
+  <button id="loginBtn">Login</button>
+  <p id="loginMsg" style="color:red;"></p>
+</div>
+
 <div id="quizArea" class="hidden"></div>
+<div id="scoreArea" class="score hidden"></div>
 </div>
 
 <script>
+// ======= 30 Soal Lengkap =======
 const questions = [
-    // ... (isi semua 30 soal seperti sebelumnya)
+  // Narrative 10 soal
+  {text:"Narrative 1: Lily found a magical map in the forest. What did she discover?", options:["A treasure","A monster","Nothing","A friend","A bird"], answer:0},
+  {text:"Narrative 2: David explored Crystal Cave with friends. What did they find?", options:["Lost items","Glittering crystals","A snake","Waterfall","Nothing"], answer:1},
+  {text:"Narrative 3: Emma met a talking cat in her garden. Who was the cat?", options:["A wizard","Her pet","A stranger","A prince","A ghost"], answer:0},
+  {text:"Narrative 4: Jack built a small raft to cross the river. What happened next?", options:["He sank","He reached the other side","He found gold","He got lost","He met a dragon"], answer:1},
+  {text:"Narrative 5: Sophia discovered a secret library. What was inside?", options:["Old books","Treasure maps","Weapons","Animals","Nothing"], answer:0},
+  {text:"Narrative 6: Tom climbed the mountain and saw a village. What did he notice?", options:["It was empty","People were dancing","It was raining","Animals were running","He saw a castle"], answer:1},
+  {text:"Narrative 7: Anna found an old letter in the attic. Who wrote it?", options:["Her grandmother","Her friend","A stranger","Her teacher","Her brother"], answer:0},
+  {text:"Narrative 8: Mark followed a mysterious light in the night forest. What did he find?", options:["A fairy","A treasure","A monster","Nothing","A camp"], answer:0},
+  {text:"Narrative 9: Lucy and her dog discovered a hidden tunnel. Where did it lead?", options:["To a cave","To a river","To the garden","To the city","To a mountain"], answer:0},
+  {text:"Narrative 10: Peter bought an old compass from a market. What was special about it?", options:["It always points North","It glows at night","It talks","It shows hidden paths","It disappears"], answer:3},
+
+  // Recount 10 soal
+  {text:"Recount 1: Albert visited the Eiffel Tower last summer. What did he enjoy the most?", options:["The view","The food","The crowd","The souvenir shop","The weather"], answer:0},
+  {text:"Recount 2: Maria met Leonardo da Vinci exhibition in Milan. What was her impression?", options:["Very creative","Boring","Confusing","Scary","Small"], answer:0},
+  {text:"Recount 3: John traveled to the Grand Canyon. What did he describe in his diary?", options:["The breathtaking view","The animals","The hotel","The shops","The weather"], answer:0},
+  {text:"Recount 4: Sarah met a famous singer at a concert. How did she feel?", options:["Excited","Bored","Sad","Tired","Confused"], answer:0},
+  {text:"Recount 5: Michael visited Statue of Liberty. What impressed him?", options:["The height","The color","The park","The ticket","The boat"], answer:0},
+  {text:"Recount 6: Anna went to Taj Mahal. What did she admire the most?", options:["The architecture","The garden","The market","The guide","The animals"], answer:0},
+  {text:"Recount 7: David saw Niagara Falls. What did he record?", options:["The sound of water","The bridges","The shops","The food","The traffic"], answer:0},
+  {text:"Recount 8: Emily visited Colosseum in Rome. What amazed her?", options:["The history","The seats","The tickets","The shops","The people"], answer:0},
+  {text:"Recount 9: Robert explored Machu Picchu. What did he enjoy?", options:["The ancient ruins","The animals","The restaurants","The crowd","The weather"], answer:0},
+  {text:"Recount 10: Jessica went to Louvre Museum. What did she see?", options:["Famous paintings","Animals","Concert","Street food","Shops"], answer:0},
+
+  // Procedure 10 soal
+  {text:"Procedure 1: How to bake a chocolate cake? What is the first step?", options:["Prepare ingredients","Bake the cake","Eat the cake","Mix frosting","Decorate"], answer:0},
+  {text:"Procedure 2: How to make a cup of tea? What should you do first?", options:["Boil water","Add sugar","Drink tea","Serve tea","Add milk"], answer:0},
+  {text:"Procedure 3: How to plant a tree? First step?", options:["Choose location","Water tree","Buy tree","Decorate garden","Harvest fruits"], answer:0},
+  {text:"Procedure 4: How to brush your teeth? First step?", options:["Apply toothpaste","Brush teeth","Rinse mouth","Choose toothbrush","Use floss"], answer:0},
+  {text:"Procedure 5: How to make paper airplane? First step?", options:["Fold paper","Throw plane","Draw on paper","Decorate plane","Cut paper"], answer:0},
+  {text:"Procedure 6: How to tie a shoe? First step?", options:["Make cross laces","Put shoe on","Tighten laces","Step on shoe","Decorate shoe"], answer:0},
+  {text:"Procedure 7: How to make lemonade? First step?", options:["Squeeze lemon","Add water","Add sugar","Stir","Serve"], answer:0},
+  {text:"Procedure 8: How to change a light bulb? First step?", options:["Turn off power","Screw bulb","Pick bulb","Buy bulb","Use ladder"], answer:0},
+  {text:"Procedure 9: How to wash hands? First step?", options:["Wet hands","Apply soap","Rinse","Dry","Turn off tap"], answer:0},
+  {text:"Procedure 10: How to wrap a gift? First step?", options:["Prepare wrapping paper","Cut paper","Place gift","Tape","Decorate"], answer:0}
 ];
 
-// Fungsi untuk mengacak array
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
+// ======= Login + Quiz Logic =======
+function shuffleArray(array){ for(let i=array.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [array[i],array[j]]=[array[j],array[i]]; } return array; }
+
+let currentNama="";
+let currentPassword="";
+
+document.getElementById("loginBtn").addEventListener("click", ()=>{
+  const nama=document.getElementById("nama").value.trim();
+  const password=document.getElementById("password").value.trim();
+
+  if(!nama || !password){ document.getElementById("loginMsg").textContent="Please fill both fields."; return; }
+
+  currentNama=nama;
+  currentPassword=password;
+
+  document.getElementById("loginForm").classList.add("hidden");
+  startQuiz();
+});
+
+function startQuiz(){
+  const quiz=document.getElementById("quizArea");
+  quiz.classList.remove("hidden");
+  quiz.innerHTML="";
+
+  const shuffledQuestions=shuffleArray([...questions]);
+
+  shuffledQuestions.forEach((q,i)=>{
+    let div=document.createElement("div");
+    div.className="question";
+    const shuffledOptions=shuffleArray(q.options.map((opt,index)=>({opt,index})));
+    div.innerHTML=`<b>${i+1}. ${q.text}</b><br>`+
+      shuffledOptions.map(o=>`<label><input type='radio' name='q${i}' value='${o.index}'> ${o.opt}</label><br>`).join('');
+    quiz.appendChild(div);
+  });
+
+  const submitBtn=document.createElement('button');
+  submitBtn.textContent='Submit Quiz';
+  submitBtn.onclick=submitScore;
+  quiz.appendChild(submitBtn);
 }
 
-function startQuiz() {
-    const quiz = document.getElementById("quizArea");
-    quiz.classList.remove("hidden");
-    quiz.innerHTML = "";
+function submitScore(){
+  let score=0;
+  questions.forEach((q,i)=>{
+    const selected=document.querySelector(`input[name='q${i}']:checked`);
+    if(selected && parseInt(selected.value)===q.answer){ score++; }
+  });
+  const scorePercent=Math.round((score/questions.length)*100);
+  document.getElementById("scoreArea").classList.remove("hidden");
+  document.getElementById("scoreArea").textContent=`Your score: ${scorePercent}/100`;
 
-    // Acak urutan soal
-    const shuffledQuestions = shuffleArray([...questions]);
-
-    shuffledQuestions.forEach((q, i) => {
-        let div = document.createElement("div");
-        div.className = "question";
-        div.innerHTML = `<b>${i+1}. ${q.text.replace(/\n/g,'<br>')}</b><br>` +
-            shuffleArray(q.options.map((opt,index)=>({opt,index})))
-            .map(o=>`
-                <label>
-                    <input type='radio' name='q${i}' value='${o.index}'> ${o.opt}
-                </label><br>
-            `).join('');
-        quiz.appendChild(div);
-    });
+  // Kirim skor ke Apps Script backend
+  fetch("PASTE_URL_WEB_APP_APPS_SCRIPT_DISINI",{
+    method:"POST",
+    body: JSON.stringify({nama: currentNama, password: currentPassword, score: scorePercent})
+  }).then(res=>res.json()).then(data=>console.log("Score sent:",data)).catch(err=>console.error(err));
 }
 </script>
 </body>
