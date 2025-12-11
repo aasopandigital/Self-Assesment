@@ -115,7 +115,7 @@ function submitScore(){
   document.getElementById("scoreArea").textContent=`Your score: ${scorePercent}/100`;
 
   // Kirim skor ke Apps Script
-  fetch("PASTE_URL_WEB_APP_APPS_SCRIPT_DISINI", {
+  fetch("https://script.google.com/macros/s/AKfycbyqqr8jP4IH6CJ_-UrwHS6De60icCuVogyRIUMSE21AlYgBBUdiwKzaJoGwNsfK4j7vXw/exec", {
     method: "POST",
     body: JSON.stringify({
       nama: currentNama,
