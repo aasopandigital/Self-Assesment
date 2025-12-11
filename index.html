@@ -34,7 +34,7 @@ button:hover { background:#45a049; }
 <script>
 // ======= 30 Soal Lengkap =======
 const questions = [
-  // Narrative 10 soal
+  // Narrative 10
   {text:"Narrative 1: Lily found a magical map in the forest. What did she discover?", options:["A treasure","A monster","Nothing","A friend","A bird"], answer:0},
   {text:"Narrative 2: David explored Crystal Cave with friends. What did they find?", options:["Lost items","Glittering crystals","A snake","Waterfall","Nothing"], answer:1},
   {text:"Narrative 3: Emma met a talking cat in her garden. Who was the cat?", options:["A wizard","Her pet","A stranger","A prince","A ghost"], answer:0},
@@ -45,8 +45,7 @@ const questions = [
   {text:"Narrative 8: Mark followed a mysterious light in the night forest. What did he find?", options:["A fairy","A treasure","A monster","Nothing","A camp"], answer:0},
   {text:"Narrative 9: Lucy and her dog discovered a hidden tunnel. Where did it lead?", options:["To a cave","To a river","To the garden","To the city","To a mountain"], answer:0},
   {text:"Narrative 10: Peter bought an old compass from a market. What was special about it?", options:["It always points North","It glows at night","It talks","It shows hidden paths","It disappears"], answer:3},
-
-  // Recount 10 soal
+  // Recount 10
   {text:"Recount 1: Albert visited the Eiffel Tower last summer. What did he enjoy the most?", options:["The view","The food","The crowd","The souvenir shop","The weather"], answer:0},
   {text:"Recount 2: Maria met Leonardo da Vinci exhibition in Milan. What was her impression?", options:["Very creative","Boring","Confusing","Scary","Small"], answer:0},
   {text:"Recount 3: John traveled to the Grand Canyon. What did he describe in his diary?", options:["The breathtaking view","The animals","The hotel","The shops","The weather"], answer:0},
@@ -57,8 +56,7 @@ const questions = [
   {text:"Recount 8: Emily visited Colosseum in Rome. What amazed her?", options:["The history","The seats","The tickets","The shops","The people"], answer:0},
   {text:"Recount 9: Robert explored Machu Picchu. What did he enjoy?", options:["The ancient ruins","The animals","The restaurants","The crowd","The weather"], answer:0},
   {text:"Recount 10: Jessica went to Louvre Museum. What did she see?", options:["Famous paintings","Animals","Concert","Street food","Shops"], answer:0},
-
-  // Procedure 10 soal
+  // Procedure 10
   {text:"Procedure 1: How to bake a chocolate cake? What is the first step?", options:["Prepare ingredients","Bake the cake","Eat the cake","Mix frosting","Decorate"], answer:0},
   {text:"Procedure 2: How to make a cup of tea? What should you do first?", options:["Boil water","Add sugar","Drink tea","Serve tea","Add milk"], answer:0},
   {text:"Procedure 3: How to plant a tree? First step?", options:["Choose location","Water tree","Buy tree","Decorate garden","Harvest fruits"], answer:0},
@@ -80,12 +78,9 @@ let currentPassword="";
 document.getElementById("loginBtn").addEventListener("click", ()=>{
   const nama=document.getElementById("nama").value.trim();
   const password=document.getElementById("password").value.trim();
-
   if(!nama || !password){ document.getElementById("loginMsg").textContent="Please fill both fields."; return; }
-
   currentNama=nama;
   currentPassword=password;
-
   document.getElementById("loginForm").classList.add("hidden");
   startQuiz();
 });
@@ -94,9 +89,7 @@ function startQuiz(){
   const quiz=document.getElementById("quizArea");
   quiz.classList.remove("hidden");
   quiz.innerHTML="";
-
   const shuffledQuestions=shuffleArray([...questions]);
-
   shuffledQuestions.forEach((q,i)=>{
     let div=document.createElement("div");
     div.className="question";
@@ -105,7 +98,6 @@ function startQuiz(){
       shuffledOptions.map(o=>`<label><input type='radio' name='q${i}' value='${o.index}'> ${o.opt}</label><br>`).join('');
     quiz.appendChild(div);
   });
-
   const submitBtn=document.createElement('button');
   submitBtn.textContent='Submit Quiz';
   submitBtn.onclick=submitScore;
@@ -122,26 +114,18 @@ function submitScore(){
   document.getElementById("scoreArea").classList.remove("hidden");
   document.getElementById("scoreArea").textContent=`Your score: ${scorePercent}/100`;
 
-  // Kirim skor ke Apps Script backend
-  fetch(function doPost(e){
-  const data = JSON.parse(e.postData.contents);
-  const ss = SpreadsheetApp.openById("SPREADSHEET_ID");
-  const sheet = ss.getSheetByName("Sheet1");
-
-  const rows = sheet.getDataRange().getValues();
-  for(let i=1; i<rows.length; i++){
-    if(rows[i][0] == data.nama && rows[i][3] == data.password){
-      sheet.getRange(i+1,5).setValue(data.score); // kolom Score
-      return ContentService.createTextOutput(JSON.stringify({status:"success"})).setMimeType(ContentService.MimeType.JSON);
-    }
-  }
-
-  return ContentService.createTextOutput(JSON.stringify({status:"fail"})).setMimeType(ContentService.MimeType.JSON);
-}
-,{
-    method:"POST",
-    body: JSON.stringify({nama: currentNama, password: currentPassword, score: scorePercent})
-  }).then(res=>res.json()).then(data=>console.log("Score sent:",data)).catch(err=>console.error(err));
+  // Kirim skor ke Apps Script
+  fetch("PASTE_URL_WEB_APP_APPS_SCRIPT_DISINI", {
+    method: "POST",
+    body: JSON.stringify({
+      nama: currentNama,
+      password: currentPassword,
+      score: scorePercent
+    })
+  })
+  .then(res => res.json())
+  .then(data => console.log("Score sent:", data))
+  .catch(err => console.error(err));
 }
 </script>
 </body>
