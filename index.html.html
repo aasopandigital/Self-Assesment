@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Soal Ulangan</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .question {
+            margin-bottom: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #result {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Soal Ulangan</h1>
+
+    <div class="question">
+        <p>1. Ibu membeli 5 apel dan 3 jeruk. Berapa jumlah buah semuanya?</p>
+        <input type="number" id="q1" />
+    </div>
+
+    <div class="question">
+        <p>2. 10 - 4 = ...</p>
+        <input type="number" id="q2" />
+    </div>
+
+    <button onclick="cekJawaban()">Kumpulkan Jawaban</button>
+
+    <p id="result"></p>
+
+    <script>
+        function cekJawaban() {
+            let benar = 0;
+
+            if (document.getElementById("q1").value == 8) benar++;
+            if (document.getElementById("q2").value == 6) benar++;
+
+            document.getElementById("result").innerText =
+                "Skor Kamu: " + benar + "/2";
+        }
+    </script>
+</body>
+</html>
