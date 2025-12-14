@@ -20,9 +20,10 @@
     <div id="start">
       <p>Nama Siswa:</p>
       <input type="text" id="nama" style="width:100%;padding:8px">
-      
+      <p>Password Ulangan:</p>
+      <input type="password" id="password" style="width:100%;padding:8px">
       <br><br>
-      <button onclick="mulai()">Mulai Ulangan</button>
+      <button onclick="cekPassword()">Masuk Ulangan</button>
     </div>
 
     <form id="quiz" style="display:none">
@@ -47,20 +48,37 @@
   </div>
 
   <script>
-    function mulai(){
-      const nama=document.getElementById('nama').value;
-      if(nama===''){alert('Lengkapi nama');return;}
-      document.getElementById('start').style.display='none';
-      document.getElementById('quiz').style.display='block';
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0bcJkPLditcZ4BeVAFcllRHS6lIeCimqXITneqNH2PWco2DfAa_bB13lvsKE8VtAQ/exec";
+
+    function cekPassword(){
+      const nama = document.getElementById('nama').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      if(nama === '' || password === ''){
+        alert('Nama dan password wajib diisi');
+        return;
+      }
+
+      fetch(SCRIPT_URL + '?password=' + encodeURIComponent(password))
+        .then(res => res.json())
+        .then(data => {
+          if(data.status === 'ok'){
+            document.getElementById('start').style.display = 'none';
+            document.getElementById('quiz').style.display = 'block';
+          } else {
+            alert('Password salah atau belum lunas');
+          }
+        })
+        .catch(err => {
+          alert('Gagal menghubungi server');
+        });
     }
-      document.getElementById('start').style.display='none';
-      document.getElementById('quiz').style.display='block';
-    }
+
     function selesai(){
-      let score=0;
-      document.querySelectorAll('input[type=radio]:checked').forEach(e=>score+=parseInt(e.value));
-      document.getElementById('quiz').style.display='none';
-      document.getElementById('result').innerHTML='Nilai Anda: '+(score*50);
+      let score = 0;
+      document.querySelectorAll('input[type=radio]:checked').forEach(e => score += parseInt(e.value));
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('result').innerHTML = 'Nilai Anda: ' + (score * 50);
     }
   </script>
 </body>
