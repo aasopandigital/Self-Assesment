@@ -2,34 +2,66 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Quiz SMA</title>
+  <title>Ulangan Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body { font-family: Arial, sans-serif; background:#f4f6f8; }
-    .container { max-width: 900px; margin: auto; background: #fff; padding: 20px; }
-    .question { margin-bottom: 15px; }
-    .hidden { display: none; }
-    button { padding: 8px 16px; margin-top: 10px; }
+    .container { max-width: 900px; margin: 30px auto; background:#fff; padding:20px; border-radius:8px; }
+    h2 { text-align:center; }
+    .question { margin-bottom:20px; }
+    button { padding:10px 20px; font-size:16px; }
+    #result { font-size:18px; font-weight:bold; margin-top:20px; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h2>Quiz SMA</h2>
+    <h2>ULANGAN ONLINE</h2>
 
-    <div class="question">
-      <p>1. What is the capital of Indonesia?</p>
-      <label><input type="radio" name="q1"> Jakarta</label><br>
-      <label><input type="radio" name="q1"> Bandung</label><br>
-      <label><input type="radio" name="q1"> Surabaya</label>
+    <div id="start">
+      <p>Nama Siswa:</p>
+      <input type="text" id="nama" style="width:100%;padding:8px">
+      
+      <br><br>
+      <button onclick="mulai()">Mulai Ulangan</button>
     </div>
 
-    <div class="question">
-      <p>2. 5 + 7 = ...</p>
-      <label><input type="radio" name="q2"> 10</label><br>
-      <label><input type="radio" name="q2"> 12</label><br>
-      <label><input type="radio" name="q2"> 14</label>
-    </div>
+    <form id="quiz" style="display:none">
+      <div class="question">
+        <p>1. Ibu kota Indonesia adalah …</p>
+        <label><input type="radio" name="q1" value="0"> Bandung</label><br>
+        <label><input type="radio" name="q1" value="1"> Jakarta</label><br>
+        <label><input type="radio" name="q1" value="0"> Surabaya</label>
+      </div>
 
-    <button onclick="alert('Quiz tersimpan!')">Selesai</button>
+      <div class="question">
+        <p>2. 8 + 7 = …</p>
+        <label><input type="radio" name="q2" value="0"> 13</label><br>
+        <label><input type="radio" name="q2" value="1"> 15</label><br>
+        <label><input type="radio" name="q2" value="0"> 16</label>
+      </div>
+
+      <button type="button" onclick="selesai()">Kirim Jawaban</button>
+    </form>
+
+    <div id="result"></div>
   </div>
+
+  <script>
+    function mulai(){
+      const nama=document.getElementById('nama').value;
+      if(nama===''){alert('Lengkapi nama');return;}
+      document.getElementById('start').style.display='none';
+      document.getElementById('quiz').style.display='block';
+    }
+      document.getElementById('start').style.display='none';
+      document.getElementById('quiz').style.display='block';
+    }
+    function selesai(){
+      let score=0;
+      document.querySelectorAll('input[type=radio]:checked').forEach(e=>score+=parseInt(e.value));
+      document.getElementById('quiz').style.display='none';
+      document.getElementById('result').innerHTML='Nilai Anda: '+(score*50);
+    }
+  </script>
 </body>
 </html>
