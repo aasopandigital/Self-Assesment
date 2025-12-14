@@ -1,85 +1,71 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Ulangan Online</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    body { font-family: Arial, sans-serif; background:#f4f6f8; }
-    .container { max-width: 900px; margin: 30px auto; background:#fff; padding:20px; border-radius:8px; }
-    h2 { text-align:center; }
-    .question { margin-bottom:20px; }
-    button { padding:10px 20px; font-size:16px; }
-    #result { font-size:18px; font-weight:bold; margin-top:20px; }
-  </style>
+<meta charset="UTF-8">
+<title>Ulangan Online Bahasa Inggris</title>
+<style>
+body{font-family:Arial;background:#f4f6f8}
+.container{max-width:900px;margin:20px auto;background:#fff;padding:20px}
+.question{margin-bottom:15px}
+button{padding:10px 20px;font-size:16px}
+.hidden{display:none}
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>ULANGAN ONLINE</h2>
 
-    <div id="start">
-      <p>Nama Siswa:</p>
-      <input type="text" id="nama" style="width:100%;padding:8px">
-      <p>Password Ulangan:</p>
-      <input type="password" id="password" style="width:100%;padding:8px">
-      <br><br>
-      <button onclick="cekPassword()">Masuk Ulangan</button>
-    </div>
+<div class="container">
+<h2>ULANGAN ONLINE – Bahasa Inggris (SMA X)</h2>
 
-    <form id="quiz" style="display:none">
-      <div class="question">
-        <p>1. Ibu kota Indonesia adalah …</p>
-        <label><input type="radio" name="q1" value="0"> Bandung</label><br>
-        <label><input type="radio" name="q1" value="1"> Jakarta</label><br>
-        <label><input type="radio" name="q1" value="0"> Surabaya</label>
-      </div>
+<div id="login">
+<p>Nama:</p>
+<input id="nama" style="width:100%">
+<p>Password:</p>
+<input id="pw" type="password" style="width:100%">
+<br><br>
+<button onclick="start()">Mulai</button>
+</div>
 
-      <div class="question">
-        <p>2. 8 + 7 = …</p>
-        <label><input type="radio" name="q2" value="0"> 13</label><br>
-        <label><input type="radio" name="q2" value="1"> 15</label><br>
-        <label><input type="radio" name="q2" value="0"> 16</label>
-      </div>
+<form id="quiz" class="hidden">
 
-      <button type="button" onclick="selesai()">Kirim Jawaban</button>
-    </form>
+<p><b>Text</b><br>
+Arga joined a school expedition and trusted his compass more than his friends. During the trip, the compass failed and caused confusion. After listening to others and observing nature, the group found their way. Arga learned the importance of cooperation.</p>
 
-    <div id="result"></div>
-  </div>
+<div class="question">
+1. What can be inferred from Arga’s decision?
+<br>
+<input type="radio" name="q1" value="0">A. He avoided responsibility<br>
+<input type="radio" name="q1" value="1">B. He was overconfident<br>
+<input type="radio" name="q1" value="0">C. He was careless<br>
+<input type="radio" name="q1" value="0">D. He was inexperienced<br>
+<input type="radio" name="q1" value="0">E. He was dishonest
+</div>
 
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx0bcJkPLditcZ4BeVAFcllRHS6lIeCimqXITneqNH2PWco2DfAa_bB13lvsKE8VtAQ/exec";
+<!-- SOAL 2–30 DISAMAKAN POLANYA -->
+<!-- UNTUK DARURAT: SEMUA q2–q30 BERNILAI 1 DI JAWABAN BENAR -->
 
-    function cekPassword(){
-      const nama = document.getElementById('nama').value.trim();
-      const password = document.getElementById('password').value.trim();
+<button type="button" onclick="submitQuiz()">Kirim Jawaban</button>
+</form>
 
-      if(nama === '' || password === ''){
-        alert('Nama dan password wajib diisi');
-        return;
-      }
+<div id="result"></div>
 
-      fetch(SCRIPT_URL + '?password=' + encodeURIComponent(password))
-        .then(res => res.json())
-        .then(data => {
-          if(data.status === 'ok'){
-            document.getElementById('start').style.display = 'none';
-            document.getElementById('quiz').style.display = 'block';
-          } else {
-            alert('Password salah atau belum lunas');
-          }
-        })
-        .catch(err => {
-          alert('Gagal menghubungi server');
-        });
-    }
+</div>
 
-    function selesai(){
-      let score = 0;
-      document.querySelectorAll('input[type=radio]:checked').forEach(e => score += parseInt(e.value));
-      document.getElementById('quiz').style.display = 'none';
-      document.getElementById('result').innerHTML = 'Nilai Anda: ' + (score * 50);
-    }
-  </script>
+<script>
+function start(){
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("quiz").classList.remove("hidden");
+}
+
+function submitQuiz(){
+ let score=0;
+ for(let i=1;i<=30;i++){
+  let q=document.querySelector('input[name=\"q'+i+'\"]:checked');
+  if(q) score+=parseInt(q.value);
+ }
+ let nilai=Math.round(score/30*100);
+ document.getElementById("result").innerHTML="<h3>Nilai: "+nilai+"</h3>";
+}
+</script>
+
 </body>
 </html>
