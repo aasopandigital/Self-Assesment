@@ -88,18 +88,33 @@ function startTimer(){
  },1000);
 }
 
+<script>
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxFiN037mze4ejaL2YNfisdzIL6WHJi5S6S4IzCAK7N7u7g9_bi05Taqf8q_ozkr51a/exec";
+
 function submitQuiz(){
  clearInterval(timerInterval);
- let score=0;
+
+ let nama = document.getElementById("nama").value.trim();
+ let score = 0;
+
  for(let i=1;i<=30;i++){
-  let q=document.querySelector('input[name="q'+i+'"]:checked');
-  if(q) score+=parseInt(q.value);
+  let q = document.querySelector('input[name="q'+i+'"]:checked');
+  if(q) score += parseInt(q.value);
  }
- let nilai=Math.round(score/30*100);
- document.getElementById("result").innerHTML="<h3>Nilai: "+nilai+"</h3>";
+
+ let nilai = Math.round(score/30*100);
+
+ fetch(WEB_APP_URL,{
+  method:"POST",
+  body: JSON.stringify({
+    nama: nama,
+    nilai: nilai
+  })
+ });
+
+ document.getElementById("result").innerHTML =
+   "<h3>Terima kasih, "+nama+"<br>Nilai kamu: "+nilai+"</h3>";
+
  document.getElementById("quiz").classList.add("hidden");
 }
 </script>
-
-</body>
-</html>
