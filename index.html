@@ -41,9 +41,11 @@ let waktu = 60 * 60; // 60 menit
 let timerInterval;
 let selectedQuestions = [];
 
-// ================= BANK SOAL =================
+/* ================= BANK SOAL ================= */
 const questionBank = [
+
 {
+type:"narrative",
 text:`One afternoon, Raka decided to explore a forest near his village.
 He had often heard stories about the forest, but he never visited it alone before.
 
@@ -62,7 +64,9 @@ questions:[
 {q:"What can be learned from the story?",opts:["Courage is useless","Nature is dangerous","Listening to advice is important","Forests should be avoided","Walking alone is fun"],a:2}
 ]
 },
+
 {
+type:"recount",
 text:`Last holiday, my family and I went to a small beach in the south of the city.
 We left early in the morning to avoid traffic.
 
@@ -81,7 +85,9 @@ questions:[
 {q:"The word memorable means…",opts:["Easy to forget","Hard to do","Worth remembering","Very expensive","Dangerous"],a:2}
 ]
 },
+
 {
+type:"descriptive",
 text:`My school library is one of my favorite places.
 It is located on the second floor of the main building.
 
@@ -100,7 +106,9 @@ questions:[
 {q:"The word atmosphere is closest in meaning to…",opts:["Temperature","Air","Situation","Building","Furniture"],a:2}
 ]
 },
+
 {
+type:"procedure",
 text:`Making a cup of tea is very easy.
 First, prepare a cup, tea bag, sugar, and hot water.
 
@@ -119,63 +127,94 @@ questions:[
 {q:"The word dissolve means…",opts:["Disappear in liquid","Be frozen","Become solid","Be thrown away","Be mixed badly"],a:0}
 ]
 }
-];
 
-// ================= START =================
-function start(){
-  if(document.getElementById("nama").value.trim()===""){
-    alert("Nama wajib diisi");return;
+];
+/* ================= SHUFFLE ================= */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
   }
+}
+
+/* ================= START ================= */
+function start(){
+  const nama=document.getElementById("nama").value.trim();
+  if(nama===""){
+    alert("Nama wajib diisi");
+    return;
+  }
+
   document.getElementById("login").classList.add("hidden");
   document.getElementById("quiz").classList.remove("hidden");
-  shuffle(questionBank);
-  questionBank.forEach(t=>shuffle(t.questions));
+
   selectedQuestions=[];
-  questionBank.forEach(t=>selectedQuestions.push(...t.questions));
+
+  shuffle(questionBank);
+  questionBank.forEach(t=>{
+    shuffle(t.questions);
+    selectedQuestions.push(...t.questions);
+  });
+
   selectedQuestions=selectedQuestions.slice(0,30);
+
   renderQuestions();
   startTimer();
 }
 
-// ================= TIMER =================
+/* ================= TIMER ================= */
 function startTimer(){
   timerInterval=setInterval(()=>{
-    let m=Math.floor(waktu/60),s=waktu%60;
-    document.getElementById("timer").innerText="Sisa waktu: "+m+":"+(s<10?"0":"")+s;
-    waktu--;if(waktu<0){clearInterval(timerInterval);submitQuiz();}
+    let m=Math.floor(waktu/60);
+    let s=waktu%60;
+    document.getElementById("timer").innerText=
+      "Sisa waktu: "+m+":"+(s<10?"0":"")+s;
+    waktu--;
+    if(waktu<0){
+      clearInterval(timerInterval);
+      submitQuiz();
+    }
   },1000);
 }
 
-// ================= RENDER =================
+/* ================= RENDER ================= */
 function renderQuestions(){
   let html="";
   selectedQuestions.forEach((q,i)=>{
-    html+=`<div class=\"question\"><b>${i+1}. ${q.q}</b><br>`;
-    let opts=[...q.opts];shuffle(opts);
+    html+=`<div class="question">
+      <b>${i+1}. ${q.q}</b><br>`;
+    let opts=[...q.opts];
+    shuffle(opts);
     opts.forEach(o=>{
       let val=(o===q.opts[q.a])?1:0;
-      html+=`<input type=\"radio\" name=\"q${i}\" value=\"${val}\"> ${o}<br>`;
+      html+=`<label>
+        <input type="radio" name="q${i}" value="${val}"> ${o}
+      </label><br>`;
     });
-    html+="</div>";
+    html+=`</div>`;
   });
   document.getElementById("questions").innerHTML=html;
 }
 
-// ================= SUBMIT =================
+/* ================= SUBMIT ================= */
 function submitQuiz(){
   clearInterval(timerInterval);
   let score=0;
   selectedQuestions.forEach((_,i)=>{
-    let q=document.querySelector(`input[name=\"q${i}\"]:checked`);
+    let q=document.querySelector(`input[name="q${i}"]:checked`);
     if(q)score+=parseInt(q.value);
   });
-  let nilai=Math.round(score/selectedQuestions.length*100);
-  fetch(WEB_APP_URL,{method:"POST",body:JSON.stringify({nama:document.getElementById("nama").value,nilai:nilai})});
-  document.getElementById("result").innerHTML="<h3>Nilai: "+nilai+"</h3>";
-}
 
-// ================= UTIL =================
-function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
-</script>
-</body>
-</html>
+  let nilai=Math.round(score/selectedQuestions.length*100);
+
+  fetch(WEB_APP_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      nama:document.getElementById("nama").value,
+      nilai:nilai
+    })
+  });
+
+  document.getElementById("result").innerHTML=
+    "<h3>Nilai kamu: "+nilai+"</h3>";
+}
