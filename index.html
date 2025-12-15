@@ -2,175 +2,16 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>Ulangan Online Bahasa Inggris</title>
-
-<style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f4f6f8;
-}
-.container{
-  max-width:900px;
-  margin:20px auto;
-  background:#fff;
-  padding:20px;
-  border-radius:8px;
-}
-.hidden{display:none}
-.question{margin-bottom:15px}
-button{
-  padding:10px 20px;
-  font-size:16px;
-  cursor:pointer;
-}
-#timer{
-  font-weight:bold;
-  color:#c0392b;
-  margin-bottom:15px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-<h2>ULANGAN ONLINE – Bahasa Inggris (SMA X)</h2>
-
-<!-- LOGIN -->
-<div id="login">
-  <p>Nama:</p>
-  <input id="nama" style="width:100%">
-  <p>Password:</p>
-  <input id="pw" type="password" style="width:100%">
-  <br><br>
-  <button onclick="start()">Mulai</button>
-</div>
-
-<!-- QUIZ -->
-<form id="quiz" class="hidden">
-
-<div id="timer">Sisa waktu: 60:00</div>
-
-<p><b>Text</b><br>
-Arga joined a school expedition and trusted his compass more than his friends.
-During the trip, the compass failed and caused confusion.
-After listening to others and observing nature, the group found their way.
-Arga learned the importance of cooperation.
-</p>
-
-<div class="question">
-1. What can be inferred from Arga’s decision?<br>
-<input type="radio" name="q1" value="0"> A. He avoided responsibility<br>
-<input type="radio" name="q1" value="1"> B. He was overconfident<br>
-<input type="radio" name="q1" value="0"> C. He was careless<br>
-<input type="radio" name="q1" value="0"> D. He was inexperienced<br>
-<input type="radio" name="q1" value="0"> E. He was dishonest
-</div>
-
-<!-- Soal 2–30 (contoh pola) -->
-<div class="question">
-2. Question number 2<br>
-<input type="radio" name="q2" value="0"> A<br>
-<input type="radio" name="q2" value="1"> B<br>
-<input type="radio" name="q2" value="0"> C<br>
-<input type="radio" name="q2" value="0"> D<br>
-<input type="radio" name="q2" value="0"> E
-</div>
-
-<!-- lanjutkan sampai q30 -->
-
-<button type="button" onclick="submitQuiz()">Kirim Jawaban</button>
-</form>
-
-<div id="result"></div>
-
-</div>
-
-<script>
-// ================= CONFIG =================
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-XEokgUPZu62S98yaiYWe8gSb4LrQV-b-itqwSIQ11EZOAydYUAHqumvwE_H3icU7/exec";
-let waktu = 60 * 60; // 60 menit
-let timerInterval;
-
-// ================= LOGIN =================
-function start(){
-  let nama = document.getElementById("nama").value.trim();
-  if(nama === ""){
-    alert("Nama wajib diisi");
-    return;
-  }
-
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("quiz").classList.remove("hidden");
-  renderQuestions();
-}
-
-// ================= TIMER =================
-function startTimer(){
-  timerInterval = setInterval(()=>{
-    let menit = Math.floor(waktu/60);
-    let detik = waktu % 60;
-    document.getElementById("timer").innerText =
-      "Sisa waktu: " + menit + ":" + (detik<10?"0":"") + detik;
-
-    waktu--;
-
-    if(waktu < 0){
-      clearInterval(timerInterval);
-      alert("Waktu habis! Jawaban dikirim otomatis.");
-      submitQuiz();
-    }
-  },1000);
-}
-
-// ================= SUBMIT =================
-function submitQuiz(){
-  clearInterval(timerInterval);
-
-  let nama = document.getElementById("nama").value.trim();
-  let score = 0;
-
-  for(let i=1;i<=30;i++){
-    let q = document.querySelector('input[name="q'+i+'"]:checked');
-    if(q) score += parseInt(q.value);
-  }
-
-  let nilai = Math.round(score/30*100);
-
-  fetch(WEB_APP_URL,{
-    method:"POST",
-    body: JSON.stringify({
-      nama: nama,
-      nilai: nilai
-    })
-  });
-
-  document.getElementById("result").innerHTML =
-    "<h3>Nilai kamu: "+nilai+"</h3>";
-}
-</script>
-
-</body>
-</html>
-<script>
-/* ================= QUESTION BANK ================= */
-const questionBank = [
-  // <!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
 <title>Ulangan Online Bahasa Inggris SMA X</title>
-
 <style>
 body{font-family:Arial;background:#f4f6f8}
 .container{max-width:900px;margin:20px auto;background:#fff;padding:20px;border-radius:8px}
 .hidden{display:none}
 .question{margin-bottom:20px}
-button{padding:10px 20px;font-size:16px}
+button{padding:10px 20px;font-size:16px;cursor:pointer}
 #timer{font-weight:bold;color:#c0392b;margin-bottom:15px}
 </style>
 </head>
-
 <body>
 <div class="container">
 <h2>ULANGAN ONLINE – Bahasa Inggris (SMA X)</h2>
@@ -178,12 +19,14 @@ button{padding:10px 20px;font-size:16px}
 <div id="login">
 <p>Nama:</p>
 <input id="nama" style="width:100%">
+<p>Password:</p>
+<input id="pw" type="password" style="width:100%">
 <br><br>
 <button onclick="start()">Mulai</button>
 </div>
 
 <form id="quiz" class="hidden">
-<div id="timer"></div>
+<div id="timer">Sisa waktu: 60:00</div>
 <div id="questions"></div>
 <button type="button" onclick="submitQuiz()">Kirim Jawaban</button>
 </form>
@@ -193,17 +36,15 @@ button{padding:10px 20px;font-size:16px}
 
 <script>
 // ================= CONFIG =================
-const WEB_APP_URL = "PASTE_URL_APPS_SCRIPT_DI_SINI";
-let waktu = 60 * 60;
+const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-XEokgUPZu62S98yaiYWe8gSb4LrQV-b-itqwSIQ11EZOAydYUAHqumvwE_H3icU7/exec";
+let waktu = 60 * 60; // 60 menit
 let timerInterval;
 let selectedQuestions = [];
 
 // ================= BANK SOAL =================
 const questionBank = [
-
-/* ================= NARRATIVE TEXT ================= */
 {
-text: `One afternoon, Raka decided to explore a forest near his village.
+text:`One afternoon, Raka decided to explore a forest near his village.
 He had often heard stories about the forest, but he never visited it alone before.
 
 As he walked deeper, the air became cooler and the trees grew taller.
@@ -221,8 +62,6 @@ questions:[
 {q:"What can be learned from the story?",opts:["Courage is useless","Nature is dangerous","Listening to advice is important","Forests should be avoided","Walking alone is fun"],a:2}
 ]
 },
-
-/* ================= RECOUNT TEXT ================= */
 {
 text:`Last holiday, my family and I went to a small beach in the south of the city.
 We left early in the morning to avoid traffic.
@@ -242,8 +81,6 @@ questions:[
 {q:"The word memorable means…",opts:["Easy to forget","Hard to do","Worth remembering","Very expensive","Dangerous"],a:2}
 ]
 },
-
-/* ================= DESCRIPTIVE TEXT ================= */
 {
 text:`My school library is one of my favorite places.
 It is located on the second floor of the main building.
@@ -263,8 +100,6 @@ questions:[
 {q:"The word atmosphere is closest in meaning to…",opts:["Temperature","Air","Situation","Building","Furniture"],a:2}
 ]
 },
-
-/* ================= PROCEDURE TEXT ================= */
 {
 text:`Making a cup of tea is very easy.
 First, prepare a cup, tea bag, sugar, and hot water.
@@ -284,29 +119,30 @@ questions:[
 {q:"The word dissolve means…",opts:["Disappear in liquid","Be frozen","Become solid","Be thrown away","Be mixed badly"],a:0}
 ]
 }
-
 ];
 
-// ================= LOGIN =================
+// ================= START =================
 function start(){
+  if(document.getElementById("nama").value.trim()===""){
+    alert("Nama wajib diisi");return;
+  }
   document.getElementById("login").classList.add("hidden");
   document.getElementById("quiz").classList.remove("hidden");
   shuffle(questionBank);
   questionBank.forEach(t=>shuffle(t.questions));
+  selectedQuestions=[];
   questionBank.forEach(t=>selectedQuestions.push(...t.questions));
-  selectedQuestions = selectedQuestions.slice(0,30);
+  selectedQuestions=selectedQuestions.slice(0,30);
   renderQuestions();
   startTimer();
 }
 
 // ================= TIMER =================
 function startTimer(){
-  timerInterval = setInterval(()=>{
+  timerInterval=setInterval(()=>{
     let m=Math.floor(waktu/60),s=waktu%60;
-    document.getElementById("timer").innerText=
-      "Sisa waktu: "+m+":"+(s<10?"0":"")+s;
-    waktu--;
-    if(waktu<0){clearInterval(timerInterval);submitQuiz();}
+    document.getElementById("timer").innerText="Sisa waktu: "+m+":"+(s<10?"0":"")+s;
+    waktu--;if(waktu<0){clearInterval(timerInterval);submitQuiz();}
   },1000);
 }
 
@@ -314,12 +150,11 @@ function startTimer(){
 function renderQuestions(){
   let html="";
   selectedQuestions.forEach((q,i)=>{
-    html+=`<div class="question"><b>${i+1}. ${q.q}</b><br>`;
-    let opts=[...q.opts];
-    shuffle(opts);
+    html+=`<div class=\"question\"><b>${i+1}. ${q.q}</b><br>`;
+    let opts=[...q.opts];shuffle(opts);
     opts.forEach(o=>{
-      let val = (o===q.opts[q.a])?1:0;
-      html+=`<input type="radio" name="q${i}" value="${val}"> ${o}<br>`;
+      let val=(o===q.opts[q.a])?1:0;
+      html+=`<input type=\"radio\" name=\"q${i}\" value=\"${val}\"> ${o}<br>`;
     });
     html+="</div>";
   });
@@ -331,149 +166,16 @@ function submitQuiz(){
   clearInterval(timerInterval);
   let score=0;
   selectedQuestions.forEach((_,i)=>{
-    let q=document.querySelector(`input[name="q${i}"]:checked`);
+    let q=document.querySelector(`input[name=\"q${i}\"]:checked`);
     if(q)score+=parseInt(q.value);
   });
   let nilai=Math.round(score/selectedQuestions.length*100);
-  fetch(WEB_APP_URL,{method:"POST",body:JSON.stringify({
-    nama:document.getElementById("nama").value,
-    nilai:nilai
-  })});
+  fetch(WEB_APP_URL,{method:"POST",body:JSON.stringify({nama:document.getElementById("nama").value,nilai:nilai})});
   document.getElementById("result").innerHTML="<h3>Nilai: "+nilai+"</h3>";
 }
 
 // ================= UTIL =================
-function shuffle(a){
-  for(let i=a.length-1;i>0;i--){
-    let j=Math.floor(Math.random()*(i+1));
-    [a[i],a[j]]=[a[j],a[i]];
-  }
-}
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}}
 </script>
 </body>
 </html>
-
-  // /* ================= NARRATIVE TEXT 2 ================= */
-{
-text:`Dina always wanted to take part in a school storytelling competition.
-She practiced every evening even though she felt nervous.
-
-At first, she often forgot parts of the story.
-Her teacher encouraged her to stay calm and focus on the message.
-
-On the competition day, Dina stood confidently on the stage.
-She told the story clearly and expressed the characters well.
-
-When the result was announced, Dina won second place.
-She felt proud because her hard work paid off.`,
-questions:[
-{q:"Why did Dina practice every evening?",opts:["She liked being alone","She was forced by her teacher","She wanted to join a competition","She was bored at home","She forgot the story"],a:2},
-{q:"What problem did Dina face during practice?",opts:["She spoke too fast","She forgot parts of the story","She lost her voice","She arrived late","She felt sleepy"],a:1},
-{q:"How did Dina feel on the competition day?",opts:["Afraid","Confused","Confident","Angry","Sad"],a:2},
-{q:"What can be learned from the story?",opts:["Winning is everything","Practice leads to improvement","Competitions are scary","Teachers are strict","Luck is important"],a:1}
-]
-},
-
-/* ================= RECOUNT TEXT 2 ================= */
-{
-text:`Last month, our class joined a tree planting program.
-It was held near a river behind our school.
-
-Early in the morning, we gathered and received instructions.
-Each student was given a small tree to plant.
-
-We dug holes, placed the trees, and watered them carefully.
-Although the sun was hot, everyone worked enthusiastically.
-
-At the end of the activity, the area looked greener.
-We felt proud because we had helped the environment.`,
-questions:[
-{q:"What activity did the students join?",opts:["Cleaning the river","Tree planting","Camping","Recycling program","Sports day"],a:1},
-{q:"Where was the activity held?",opts:["In the forest","At the beach","Behind the school","In the classroom","On the mountain"],a:2},
-{q:"How did the students feel at the end?",opts:["Tired","Angry","Proud","Bored","Disappointed"],a:2},
-{q:"The purpose of the activity was to…",opts:["Have fun","Improve health","Help the environment","Win a prize","Finish homework"],a:2}
-]
-},
-
-/* ================= DESCRIPTIVE TEXT 2 ================= */
-{
-text:`The park near my house is a popular place in my neighborhood.
-It is surrounded by tall trees and colorful flowers.
-
-In the center of the park, there is a small lake with clear water.
-People often sit around it to relax and enjoy the view.
-
-Children usually play on the swings and slides.
-In the afternoon, many families come to spend time together.
-
-The park is clean and well-maintained.
-It makes the area more comfortable and beautiful.`,
-questions:[
-{q:"What does the text describe?",opts:["A lake","A playground","A park","A garden","A forest"],a:2},
-{q:"What is located in the center of the park?",opts:["A playground","A stage","A lake","A fountain","A food stall"],a:2},
-{q:"Who usually plays on the swings?",opts:["Parents","Teachers","Children","Visitors","Workers"],a:2},
-{q:"Why do people like the park?",opts:["It is noisy","It is dirty","It is comfortable","It is crowded","It is far"],a:2}
-]
-},
-
-/* ================= PROCEDURE TEXT 2 ================= */
-{
-text:`To wash your hands properly, follow these steps carefully.
-First, wet your hands with clean running water.
-
-Next, apply enough soap to cover all hand surfaces.
-Rub your hands together, including between fingers and under nails.
-
-After that, rinse your hands thoroughly with water.
-Make sure no soap remains on your hands.
-
-Finally, dry your hands using a clean towel.
-Clean hands help prevent the spread of germs.`,
-questions:[
-{q:"What is the purpose of the text?",opts:["To describe hands","To explain hygiene","To tell a story","To give instructions","To advertise soap"],a:3},
-{q:"When should soap be applied?",opts:["After drying hands","Before wetting hands","After wetting hands","After rinsing","At the end"],a:2},
-{q:"Why should hands be washed properly?",opts:["To save water","To look clean","To prevent germs","To smell good","To feel warm"],a:2},
-{q:"What should be done last?",opts:["Apply soap","Rub hands","Rinse hands","Dry hands","Wet hands"],a:3}
-]
-}
-
-];
-
-/* ================= SHUFFLE ================= */
-function shuffle(arr){
-  for(let i=arr.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-}
-
-/* ================= RENDER SOAL ================= */
-function renderQuestions(){
-  const quiz=document.getElementById("quiz");
-  quiz.innerHTML="";
-  shuffle(questionBank);
-  let selected=questionBank.slice(0,30);
-
-  let no=1;
-  selected.forEach(item=>{
-    let block=document.createElement("div");
-    block.className="question";
-
-    let text=`<p><b>Text</b><br>${item.text.replace(/\n/g,"<br>")}</p>`;
-    block.innerHTML=text;
-
-    shuffle(item.questions);
-    item.questions.forEach(q=>{
-      let html=`<p>${no}. ${q.q}</p>`;
-      q.opts.forEach((o,i)=>{
-        html+=`<label>
-        <input type="radio" name="q${no}" value="${i===q.a?1:0}"> ${String.fromCharCode(65+i)}. ${o}
-        </label><br>`;
-      });
-      block.innerHTML+=html;
-      no++;
-    });
-    quiz.appendChild(block);
-  });
-}
-</script>
