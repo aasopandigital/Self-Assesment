@@ -208,13 +208,12 @@ function submitQuiz(){
   let nilai=Math.round(score/selectedQuestions.length*100);
 
   fetch(WEB_APP_URL,{
-    method:"POST",
-    body:JSON.stringify({
-      nama:document.getElementById("nama").value,
-      nilai:nilai
-    })
-  });
-
-  document.getElementById("result").innerHTML=
-    "<h3>Nilai kamu: "+nilai+"</h3>";
-}
+  method:"POST",
+  headers:{ "Content-Type":"application/json" },
+  body:JSON.stringify({
+    nama: document.getElementById("nama").value,
+    nilai: nilai,
+    durasi: 60,
+    waktuSelesai: new Date().toISOString()
+  })
+});
