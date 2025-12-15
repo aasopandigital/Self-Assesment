@@ -9,12 +9,14 @@ body{font-family:Arial;background:#f4f6f8}
 .question{margin-bottom:15px}
 button{padding:10px 20px;font-size:16px}
 .hidden{display:none}
+#timer{color:red;font-weight:bold;font-size:18px}
 </style>
 </head>
 <body>
 
 <div class="container">
 <h2>ULANGAN ONLINE – Bahasa Inggris (SMA X)</h2>
+<div id="timer"></div>
 
 <div id="login">
 <p>Nama:</p>
@@ -59,27 +61,43 @@ for(let i=2;i<=30;i++){
 </form>
 
 <div id="result"></div>
-
 </div>
 
 <script>
+let waktu = 60 * 60; // ⏱️ 60 menit (ubah kalau perlu)
+let timerInterval;
+
 function start(){
  document.getElementById("login").classList.add("hidden");
  document.getElementById("quiz").classList.remove("hidden");
+ startTimer();
+}
+
+function startTimer(){
+ timerInterval = setInterval(()=>{
+  let menit = Math.floor(waktu/60);
+  let detik = waktu % 60;
+  document.getElementById("timer").innerText =
+    "Sisa waktu: " + menit + ":" + (detik<10?"0":"") + detik;
+  waktu--;
+  if(waktu < 0){
+    clearInterval(timerInterval);
+    alert("Waktu habis! Jawaban dikirim otomatis.");
+    submitQuiz();
+  }
+ },1000);
 }
 
 function submitQuiz(){
+ clearInterval(timerInterval);
  let score=0;
  for(let i=1;i<=30;i++){
   let q=document.querySelector('input[name="q'+i+'"]:checked');
-  if(!q){
-    alert("Soal nomor "+i+" belum dijawab!");
-    return;
-  }
-  score+=parseInt(q.value);
+  if(q) score+=parseInt(q.value);
  }
  let nilai=Math.round(score/30*100);
  document.getElementById("result").innerHTML="<h3>Nilai: "+nilai+"</h3>";
+ document.getElementById("quiz").classList.add("hidden");
 }
 </script>
 
