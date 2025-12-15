@@ -9,6 +9,7 @@ body{font-family:Arial;background:#f4f6f8}
 .question{margin-bottom:15px}
 button{padding:10px 20px;font-size:16px}
 .hidden{display:none}
+.error{color:red}
 </style>
 </head>
 <body>
@@ -21,7 +22,8 @@ button{padding:10px 20px;font-size:16px}
 <input id="nama" style="width:100%">
 <p>Password:</p>
 <input id="pw" type="password" style="width:100%">
-<br><br>
+<p id="err" class="error"></p>
+<br>
 <button onclick="start()">Mulai</button>
 </div>
 
@@ -31,8 +33,7 @@ button{padding:10px 20px;font-size:16px}
 Arga joined a school expedition and trusted his compass more than his friends. During the trip, the compass failed and caused confusion. After listening to others and observing nature, the group found their way. Arga learned the importance of cooperation.</p>
 
 <div class="question">
-1. What can be inferred from Arga’s decision?
-<br>
+<b>1. What can be inferred from Arga’s decision?</b><br>
 <input type="radio" name="q1" value="0">A. He avoided responsibility<br>
 <input type="radio" name="q1" value="1">B. He was overconfident<br>
 <input type="radio" name="q1" value="0">C. He was careless<br>
@@ -40,18 +41,36 @@ Arga joined a school expedition and trusted his compass more than his friends. D
 <input type="radio" name="q1" value="0">E. He was dishonest
 </div>
 
-<!-- SOAL 2–30 DISAMAKAN POLANYA -->
-<!-- UNTUK DARURAT: SEMUA q2–q30 BERNILAI 1 DI JAWABAN BENAR -->
+<script>
+for(let i=2;i<=30;i++){
+ document.write(`
+ <div class="question">
+ <b>${i}. Question number ${i}</b><br>
+ <input type="radio" name="q${i}" value="0">A<br>
+ <input type="radio" name="q${i}" value="1">B<br>
+ <input type="radio" name="q${i}" value="0">C<br>
+ <input type="radio" name="q${i}" value="0">D<br>
+ <input type="radio" name="q${i}" value="0">E
+ </div>
+ `);
+}
+</script>
 
 <button type="button" onclick="submitQuiz()">Kirim Jawaban</button>
 </form>
 
 <div id="result"></div>
-
 </div>
 
 <script>
+const PASSWORD = "SMA2025"; // ← ganti password di sini
+
 function start(){
+ let pw = document.getElementById("pw").value;
+ if(pw !== PASSWORD){
+   document.getElementById("err").innerText="Password salah!";
+   return;
+ }
  document.getElementById("login").classList.add("hidden");
  document.getElementById("quiz").classList.remove("hidden");
 }
@@ -59,11 +78,16 @@ function start(){
 function submitQuiz(){
  let score=0;
  for(let i=1;i<=30;i++){
-  let q=document.querySelector('input[name=\"q'+i+'\"]:checked');
-  if(q) score+=parseInt(q.value);
+  let q=document.querySelector('input[name="q'+i+'"]:checked');
+  if(!q){
+    alert("Soal nomor "+i+" belum dijawab!");
+    return;
+  }
+  score+=parseInt(q.value);
  }
  let nilai=Math.round(score/30*100);
  document.getElementById("result").innerHTML="<h3>Nilai: "+nilai+"</h3>";
+ document.getElementById("quiz").classList.add("hidden");
 }
 </script>
 
