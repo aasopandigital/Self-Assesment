@@ -81,7 +81,43 @@ function startTimer(){
   },1000);
 }
 
-// ===== SOAL TES =====
+<script>
+let waktu = 60 * 60;
+let timerInterval;
+let skor = 0;
+
+// ===== MULAI =====
+function start(){
+  const nama = document.getElementById("nama").value.trim();
+  if(nama === ""){
+    alert("Nama wajib diisi");
+    return;
+  }
+
+  document.getElementById("login").classList.add("hidden");
+  document.getElementById("quiz").classList.remove("hidden");
+
+  renderQuestions();
+  startTimer();
+}
+
+// ===== TIMER =====
+function startTimer(){
+  timerInterval = setInterval(()=>{
+    let m = Math.floor(waktu / 60);
+    let s = waktu % 60;
+    document.getElementById("timer").innerText =
+      "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
+
+    waktu--;
+    if(waktu < 0){
+      clearInterval(timerInterval);
+      selesai();
+    }
+  },1000);
+}
+
+// ===== SOAL + TOMBOL SELESAI =====
 function renderQuestions(){
   document.getElementById("questions").innerHTML = `
     <div class="question">
@@ -99,9 +135,23 @@ function renderQuestions(){
       <label><input type="radio" name="q1" value="D"> D. He was inexperienced</label><br>
       <label><input type="radio" name="q1" value="E"> E. He was dishonest</label>
     </div>
+
+    <button onclick="selesai()">SELESAI UJIAN</button>
   `;
+}
+
+// ===== HITUNG SKOR =====
+function selesai(){
+  clearInterval(timerInterval);
+
+  const jawaban = document.querySelector('input[name="q1"]:checked');
+  skor = 0;
+
+  if(jawaban && jawaban.value === "B"){
+    skor = 100;
+  }
+
+  alert("Ujian selesai\nSkor kamu: " + skor);
 }
 </script>
 
-</body>
-</html>
