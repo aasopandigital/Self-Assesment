@@ -52,10 +52,7 @@ let timerInterval;
 /* START UJIAN */
 function start() {
   const nama = document.getElementById("nama").value.trim();
-  if (nama === "") {
-    alert("Silakan masukkan nama terlebih dahulu");
-    return;
-  }
+  if (!nama) { alert("Silakan masukkan nama terlebih dahulu"); return; }
   document.getElementById("login").style.display = "none";
   document.getElementById("quiz").classList.remove("hidden");
 
@@ -66,39 +63,27 @@ function start() {
 /* TIMER */
 function startTimer() {
   timerInterval = setInterval(() => {
-    let m = Math.floor(waktu / 60);
+    let m = Math.floor(waktu/60);
     let s = waktu % 60;
     document.getElementById("timer").innerText =
       "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
     waktu--;
-    if (waktu < 0) {
-      clearInterval(timerInterval);
-      selesai();
-    }
+    if (waktu < 0) { clearInterval(timerInterval); selesai(); }
   }, 1000);
 }
 
 /* SOAL */
 const questions = [
-  {
-    q: "She ____ to school every day.",
-    options: ["go", "goes", "went", "going", "gone"],
-    answer: 1
-  }
+  { q: "She ____ to school every day.", options:["go","goes","went","going","gone"], answer:1 }
 ];
 
 /* RENDER SOAL */
 function renderQuestions() {
   let html = "";
   questions.forEach((item, index) => {
-    html += `<div class="question">
-      <p>${index + 1}. ${item.q}</p>`;
-    item.options.forEach((opt, i) => {
-      html += `
-        <label>
-          <input type="radio" name="q${index}" value="${i}">
-          ${String.fromCharCode(65 + i)}. ${opt}
-        </label><br>`;
+    html += `<div class="question"><p>${index+1}. ${item.q}</p>`;
+    item.options.forEach((opt,i) => {
+      html += `<label><input type="radio" name="q${index}" value="${i}"> ${String.fromCharCode(65+i)}. ${opt}</label><br>`;
     });
     html += `</div>`;
   });
@@ -106,45 +91,42 @@ function renderQuestions() {
   document.getElementById("questions").innerHTML = html;
 }
 
-/* SELESAI UJIAN & KIRIM NILAI */
+/* SELESAI UJIAN & FETCH DEBUG */
 function selesai() {
   clearInterval(timerInterval);
 
   let score = 0;
-  questions.forEach((q, i) => {
+  questions.forEach((q,i)=>{
     const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    if (selected && parseInt(selected.value) === q.answer) {
-      score++;
-    }
+    if(selected && parseInt(selected.value)===q.answer) score++;
   });
 
   const nama = document.getElementById("nama").value;
+  const payload = { nama: nama, skor: score, total: questions.length };
 
-  fetch("https://script.google.com/macros/s/AKfycbyK6HaoN6caQRu90ygnjE8eAO4RNbKLDehiL_yVmX_PFM63TzXiSC1UBNFx4ToGkD_d6Q/exec", { // GANTI INI DENGAN URL WEB APP
+  console.log("Payload yang dikirim:", payload);
+
+  fetch("https://script.google.com/macros/s/AKfycbyK6HaoN6caQRu90ygnjE8eAO4RNbKLDehiL_yVmX_PFM63TzXiSC1UBNFx4ToGkD_d6Q/exec", { // GANTI DENGAN URL WEB APP
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      nama: nama,
-      skor: score,
-      total: questions.length
-    })
+    body: JSON.stringify(payload)
   })
-  .then(res => {
+  .then(async res => {
     console.log("HTTP status:", res.status);
-    return res.text();
-  })
-  .then(text => {
-    console.log("Response server:", text);
+    const text = await res.text();
+    console.log("Raw response:", text);
+
     try {
       const data = JSON.parse(text);
-      if (data.status === "success") {
-        alert("Ujian selesai! Nilai kamu: " + score);
+      console.log("Parsed JSON:", data);
+      if(data.status==="success"){
+        alert("Ujian selesai! Nilai kamu: "+score);
       } else {
-        alert("Server error: " + data.message);
+        alert("Server error: "+data.message);
       }
-    } catch (err) {
-      console.error("Parsing response error:", err);
-      alert("Response tidak valid dari server. Cek console.");
+    } catch(err){
+      console.error("Parsing error:", err);
+      alert("Response server tidak valid. Cek console.");
     }
   })
   .catch(err => {
