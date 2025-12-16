@@ -108,18 +108,34 @@ function renderQuestions(){
   document.getElementById("questions").innerHTML = html;
 }
    
-function selesai(){
-  clearInterval(timerInterval);
+function selesai() {
+  let score = 0;
 
-  let benar = 0;
-
-  questions.forEach((item, index) => {
-    const jawab = document.querySelector(`input[name="q${index}"]:checked`);
-    if(jawab && parseInt(jawab.value) === item.answer){
-      benar++;
+  questions.forEach((q, i) => {
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+    if (selected && parseInt(selected.value) === q.answer) {
+      score++;
     }
   });
 
-  let skor = Math.round((benar / questions.length) * 100);
-  alert(`Ujian selesai\nJawaban benar: ${benar}\nSkor: ${skor}`);
-}
+  const nama = document.getElementById("nama").value;
+
+  fetch("https://script.google.com/macros/s/AKfycbxZCJSSJ36MAcZfCiYNCRwrSGhcBV94JYdz8JlrBomGBi8hlzllRyDuAa4h8SRUFnDIpw/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    nama: nama,
+    skor: score,
+    total: questions.length
+  })
+})
+.then(res => res.json())
+.then(data => {
+  alert("Ujian selesai! Nilai kamu: " + score);
+})
+.catch(err => {
+  alert("Gagal mengirim nilai");
+  console.error(err);
+});
