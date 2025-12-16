@@ -142,7 +142,9 @@ function selesai() {
 
   const nama = document.getElementById("nama").value;
 
-  fetch("https://script.google.com/macros/s/AKfycbwzylo-ZNCjANgOiQ4-AvxdyNE9cfVxlezbx2nCVJQ_KlgXaZx0sanNb7ySjuU9i64iHw/exec", {
+  fetch(" fetch("https://script.google.com/macros/s/AKfycbwzylo-ZNCjANgOiQ4-AvxdyNE9cfVxlezbx2nCVJQ_KlgXaZx0sanNb7ySjuU9i64iHw/exec", {
+    method: "POST",
+    headers: {", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
