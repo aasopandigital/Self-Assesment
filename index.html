@@ -46,23 +46,16 @@
 </div>
 
 <script>
-/* =====================
-   VARIABEL GLOBAL
-===================== */
-let waktu = 60 * 60; // 60 menit
+let waktu = 60 * 60;
 let timerInterval;
 
-/* =====================
-   START UJIAN
-===================== */
+/* START UJIAN */
 function start() {
   const nama = document.getElementById("nama").value.trim();
-
   if (nama === "") {
     alert("Silakan masukkan nama terlebih dahulu");
     return;
   }
-
   document.getElementById("login").style.display = "none";
   document.getElementById("quiz").classList.remove("hidden");
 
@@ -70,19 +63,14 @@ function start() {
   startTimer();
 }
 
-/* =====================
-   TIMER
-===================== */
+/* TIMER */
 function startTimer() {
   timerInterval = setInterval(() => {
     let m = Math.floor(waktu / 60);
     let s = waktu % 60;
-
     document.getElementById("timer").innerText =
       "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
-
     waktu--;
-
     if (waktu < 0) {
       clearInterval(timerInterval);
       selesai();
@@ -90,9 +78,7 @@ function startTimer() {
   }, 1000);
 }
 
-/* =====================
-   SOAL
-===================== */
+/* SOAL */
 const questions = [
   {
     q: "She ____ to school every day.",
@@ -101,16 +87,12 @@ const questions = [
   }
 ];
 
-/* =====================
-   RENDER SOAL
-===================== */
+/* RENDER SOAL */
 function renderQuestions(){
   let html = "";
-
   questions.forEach((item, index) => {
     html += `<div class="question">
       <p>${index + 1}. ${item.q}</p>`;
-
     item.options.forEach((opt, i) => {
       html += `
         <label>
@@ -118,17 +100,13 @@ function renderQuestions(){
           ${String.fromCharCode(65+i)}. ${opt}
         </label><br>`;
     });
-
     html += `</div>`;
   });
-
   html += `<button type="button" onclick="selesai()">SELESAI UJIAN</button>`;
   document.getElementById("questions").innerHTML = html;
 }
 
-/* =====================
-   SELESAI & KIRIM NILAI
-===================== */
+/* SELESAI UJIAN & KIRIM NILAI */
 function selesai() {
   clearInterval(timerInterval);
 
@@ -142,25 +120,26 @@ function selesai() {
 
   const nama = document.getElementById("nama").value;
 
-  fetch(" fetch("https://script.google.com/macros/s/AKfycbwzylo-ZNCjANgOiQ4-AvxdyNE9cfVxlezbx2nCVJQ_KlgXaZx0sanNb7ySjuU9i64iHw/exec", {
+  fetch("URL_BARU_APPS_SCRIPT", {
     method: "POST",
-    headers: {", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       nama: nama,
       skor: score,
       total: questions.length
     })
   })
-  .then(() => {
+  .then(res => {
+    console.log("HTTP status:", res.status);
+    return res.json();
+  })
+  .then(data => {
+    console.log("Response server:", data);
     alert("Ujian selesai! Nilai kamu: " + score);
   })
   .catch(err => {
-    alert("Gagal mengirim nilai");
-    console.error(err);
+    console.error("Fetch error:", err);
+    alert("Gagal mengirim nilai. Cek console untuk detail.");
   });
 }
 </script>
