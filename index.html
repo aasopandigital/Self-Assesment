@@ -6,20 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
-    body{
+    body {
       font-family: Arial, sans-serif;
       max-width: 800px;
       margin: auto;
       padding: 20px;
     }
-    .hidden{ display:none; }
-    .question{ margin-bottom: 25px; }
-    #timer{
+    .hidden { display:none; }
+    .question { margin-bottom: 25px; }
+    #timer {
       font-weight: bold;
       color: red;
       margin-bottom: 20px;
     }
-    button{
+    button {
       padding: 10px 20px;
       font-size: 16px;
       cursor: pointer;
@@ -88,7 +88,7 @@ const questions = [
 ];
 
 /* RENDER SOAL */
-function renderQuestions(){
+function renderQuestions() {
   let html = "";
   questions.forEach((item, index) => {
     html += `<div class="question">
@@ -97,7 +97,7 @@ function renderQuestions(){
       html += `
         <label>
           <input type="radio" name="q${index}" value="${i}">
-          ${String.fromCharCode(65+i)}. ${opt}
+          ${String.fromCharCode(65 + i)}. ${opt}
         </label><br>`;
     });
     html += `</div>`;
@@ -120,7 +120,7 @@ function selesai() {
 
   const nama = document.getElementById("nama").value;
 
-  fetch("https://script.google.com/macros/s/AKfycbyK6HaoN6caQRu90ygnjE8eAO4RNbKLDehiL_yVmX_PFM63TzXiSC1UBNFx4ToGkD_d6Q/exec", {
+  fetch("https://script.google.com/macros/s/AKfycbyK6HaoN6caQRu90ygnjE8eAO4RNbKLDehiL_yVmX_PFM63TzXiSC1UBNFx4ToGkD_d6Q/exec", { // GANTI INI DENGAN URL WEB APP
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -131,11 +131,21 @@ function selesai() {
   })
   .then(res => {
     console.log("HTTP status:", res.status);
-    return res.json();
+    return res.text();
   })
-  .then(data => {
-    console.log("Response server:", data);
-    alert("Ujian selesai! Nilai kamu: " + score);
+  .then(text => {
+    console.log("Response server:", text);
+    try {
+      const data = JSON.parse(text);
+      if (data.status === "success") {
+        alert("Ujian selesai! Nilai kamu: " + score);
+      } else {
+        alert("Server error: " + data.message);
+      }
+    } catch (err) {
+      console.error("Parsing response error:", err);
+      alert("Response tidak valid dari server. Cek console.");
+    }
   })
   .catch(err => {
     console.error("Fetch error:", err);
