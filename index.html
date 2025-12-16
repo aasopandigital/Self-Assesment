@@ -48,45 +48,8 @@
 <script>
 let waktu = 60 * 60;
 let timerInterval;
-
-// ===== MULAI UJIAN =====
-function start(){
-  const nama = document.getElementById("nama").value.trim();
-  if(nama === ""){
-    alert("Nama wajib diisi");
-    return;
-  }
-
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("quiz").classList.remove("hidden");
-
-  renderQuestions();
-  startTimer();
-}
-
-// ===== TIMER =====
-function startTimer(){
-  timerInterval = setInterval(()=>{
-    let m = Math.floor(waktu / 60);
-    let s = waktu % 60;
-
-    document.getElementById("timer").innerText =
-      "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
-
-    waktu--;
-    if(waktu < 0){
-      clearInterval(timerInterval);
-      alert("Waktu habis");
-    }
-  },1000);
-}
-
-<script>
-let waktu = 60 * 60;
-let timerInterval;
 let skor = 0;
 
-// ===== MULAI =====
 function start(){
   const nama = document.getElementById("nama").value.trim();
   if(nama === ""){
@@ -101,7 +64,6 @@ function start(){
   startTimer();
 }
 
-// ===== TIMER =====
 function startTimer(){
   timerInterval = setInterval(()=>{
     let m = Math.floor(waktu / 60);
@@ -120,16 +82,25 @@ function startTimer(){
 function renderQuestions(){
   document.getElementById("questions").innerHTML = `
     <div class="question">
-      <p>TES TOMBOL</p>
+      <p><b>Text</b><br>
+      Arga joined a school expedition and trusted his compass more than his friends.
+      During the trip, the compass failed and caused confusion.
+      After listening to others and observing nature, the group found their way.
+      Arga learned the importance of cooperation.
+      </p>
 
-      <label><input type="radio" name="q1" value="B"> Jawaban B</label>
+      <p>1. What can be inferred from Arga’s decision?</p>
+      <label><input type="radio" name="q1" value="A"> A. He avoided responsibility</label><br>
+      <label><input type="radio" name="q1" value="B"> B. He was overconfident</label><br>
+      <label><input type="radio" name="q1" value="C"> C. He was careless</label><br>
+      <label><input type="radio" name="q1" value="D"> D. He was inexperienced</label><br>
+      <label><input type="radio" name="q1" value="E"> E. He was dishonest</label>
     </div>
 
     <button onclick="selesai()">SELESAI UJIAN</button>
   `;
 }
 
-// ===== HITUNG SKOR =====
 function selesai(){
   clearInterval(timerInterval);
 
@@ -143,4 +114,7 @@ function selesai(){
   alert("Ujian selesai\nSkor kamu: " + skor);
 }
 </script>
+  
+</body>
+</html>
 
