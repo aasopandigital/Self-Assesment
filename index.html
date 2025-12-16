@@ -36,7 +36,7 @@
   <p>Masukkan nama sebelum mulai:</p>
   <input type="text" id="nama" placeholder="Nama lengkap">
   <br><br>
-  <button onclick="start()">MULAI UJIAN</button>
+  <button type="button" onclick="start()">MULAI UJIAN</button>
 </div>
 
 <!-- QUIZ -->
@@ -46,38 +46,53 @@
 </div>
 
 <script>
-let waktu = 60 * 60;
+/* =====================
+   VARIABEL GLOBAL
+===================== */
+let waktu = 60 * 60; // 60 menit
 let timerInterval;
-let skor = 0;
 
-function start(){
+/* =====================
+   START UJIAN
+===================== */
+function start() {
   const nama = document.getElementById("nama").value.trim();
-  if(nama === ""){
-    alert("Nama wajib diisi");
+
+  if (nama === "") {
+    alert("Silakan masukkan nama terlebih dahulu");
     return;
   }
 
-  document.getElementById("login").classList.add("hidden");
+  document.getElementById("login").style.display = "none";
   document.getElementById("quiz").classList.remove("hidden");
 
   renderQuestions();
   startTimer();
 }
 
-function startTimer(){
-  timerInterval = setInterval(()=>{
+/* =====================
+   TIMER
+===================== */
+function startTimer() {
+  timerInterval = setInterval(() => {
     let m = Math.floor(waktu / 60);
     let s = waktu % 60;
+
     document.getElementById("timer").innerText =
       "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
 
     waktu--;
-    if(waktu < 0){
+
+    if (waktu < 0) {
       clearInterval(timerInterval);
       selesai();
     }
-  },1000);
+  }, 1000);
 }
+
+/* =====================
+   SOAL
+===================== */
 const questions = [
   {
     q: "She ____ to school every day.",
@@ -86,6 +101,9 @@ const questions = [
   }
 ];
 
+/* =====================
+   RENDER SOAL
+===================== */
 function renderQuestions(){
   let html = "";
 
@@ -104,13 +122,17 @@ function renderQuestions(){
     html += `</div>`;
   });
 
-  html += `<button onclick="selesai()">SELESAI UJIAN</button>`;
+  html += `<button type="button" onclick="selesai()">SELESAI UJIAN</button>`;
   document.getElementById("questions").innerHTML = html;
 }
-   
-function selesai() {
-  let score = 0;
 
+/* =====================
+   SELESAI & KIRIM NILAI
+===================== */
+function selesai() {
+  clearInterval(timerInterval);
+
+  let score = 0;
   questions.forEach((q, i) => {
     const selected = document.querySelector(`input[name="q${i}"]:checked`);
     if (selected && parseInt(selected.value) === q.answer) {
@@ -121,21 +143,25 @@ function selesai() {
   const nama = document.getElementById("nama").value;
 
   fetch("https://script.google.com/macros/s/AKfycbyqGF1fFu4EEaBAO3prwWbTUM93-8mrD1xzp6X-eSRgeDpBN7I5q7pG5FBRC_TBGjqWOQ/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    nama: nama,
-    skor: score,
-    total: questions.length
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      nama: nama,
+      skor: score,
+      total: questions.length
+    })
   })
-})
-.then(res => res.json())
-.then(data => {
-  alert("Ujian selesai! Nilai kamu: " + score);
-})
-.catch(err => {
-  alert("Gagal mengirim nilai");
-  console.error(err);
-});
+  .then(() => {
+    alert("Ujian selesai! Nilai kamu: " + score);
+  })
+  .catch(err => {
+    alert("Gagal mengirim nilai");
+    console.error(err);
+  });
+}
+</script>
+
+</body>
+</html>
