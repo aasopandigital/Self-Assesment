@@ -1,48 +1,8 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-<meta charset="UTF-8">
-<title>Ulangan Online Bahasa Inggris SMA X</title>
-<style>
-body{font-family:Arial;background:#f4f6f8}
-.container{max-width:900px;margin:20px auto;background:#fff;padding:20px;border-radius:8px}
-.hidden{display:none}
-.question{margin-bottom:20px}
-button{padding:10px 20px;font-size:16px;cursor:pointer}
-#timer{font-weight:bold;color:#c0392b;margin-bottom:15px}
-</style>
-</head>
-
-<body>
-<div class="container">
-<h2>ULANGAN ONLINE – Bahasa Inggris (SMA X)</h2>
-
-<!-- LOGIN -->
-<div id="login">
-<p>Nama:</p>
-<input id="nama" style="width:100%">
-<p>Password:</p>
-<input id="pw" type="password" style="width:100%">
-<br><br>
-<button onclick="start()">Mulai</button>
-</div>
-
-<!-- QUIZ -->
-<form id="quiz" class="hidden">
-<div id="timer">Sisa waktu: 60:00</div>
-<div id="questions"></div>
-<button type="button" onclick="submitQuiz()">Kirim Jawaban</button>
-</form>
-
-<div id="result"></div>
-</div>
-
 <script>
-// ================= CONFIG =================
-let waktu = 60 * 60; // 60 menit
+let waktu = 60 * 60;
 let timerInterval;
 
-// ================= START =================
+// ===== TOMBOL MULAI =====
 function start(){
   const nama = document.getElementById("nama").value.trim();
   if(nama === ""){
@@ -53,76 +13,44 @@ function start(){
   document.getElementById("login").classList.add("hidden");
   document.getElementById("quiz").classList.remove("hidden");
 
-  startTimer();
   renderQuestions();
+  startTimer();
 }
 
-// ================= TIMER =================
+// ===== TIMER =====
 function startTimer(){
   timerInterval = setInterval(()=>{
-    waktu--;
-    let m = Math.floor(waktu/60);
+    let m = Math.floor(waktu / 60);
     let s = waktu % 60;
     document.getElementById("timer").innerText =
-      "Sisa waktu: " + m + ":" + (s<10?"0":"") + s;
+      "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
 
-    if(waktu <= 0){
+    waktu--;
+    if(waktu < 0){
       clearInterval(timerInterval);
-      submitQuiz();
+      alert("Waktu habis");
     }
   },1000);
 }
 
-// ================= SOAL =================
-const questionBank = [
-  {
-    text:"Dina always wanted to take part in a school storytelling competition...",
-    questions:[
-      {q:"Why did Dina practice every evening?",
-       opts:["She liked being alone","She was forced","She wanted to join a competition","She was bored","She forgot the story"],
-       a:2}
-    ]
-  }
-];
-
-// ================= RENDER =================
+// ===== SOAL CONTOH (UNTUK TES) =====
 function renderQuestions(){
-  const qDiv = document.getElementById("questions");
-  qDiv.innerHTML="";
-  let no = 1;
+  document.getElementById("questions").innerHTML = `
+    <div class="question">
+      <p><b>Text</b><br>
+      Arga joined a school expedition and trusted his compass more than his friends.
+      During the trip, the compass failed and caused confusion.
+      After listening to others and observing nature, the group found their way.
+      Arga learned the importance of cooperation.
+      </p>
 
-  questionBank.forEach(item=>{
-    let block = document.createElement("div");
-    block.className="question";
-    block.innerHTML = "<b>Text</b><br>"+item.text+"<br><br>";
-
-    item.questions.forEach(q=>{
-      block.innerHTML += `<b>${no}. ${q.q}</b><br>`;
-      q.opts.forEach((o,i)=>{
-        block.innerHTML += `
-          <label>
-            <input type="radio" name="q${no}" value="${i===q.a?1:0}">
-            ${String.fromCharCode(65+i)}. ${o}
-          </label><br>`;
-      });
-      no++;
-    });
-
-    qDiv.appendChild(block);
-  });
-}
-
-// ================= SUBMIT =================
-function submitQuiz(){
-  clearInterval(timerInterval);
-  let score = 0;
-
-  document.querySelectorAll("input[type=radio]:checked")
-    .forEach(r=>score+=parseInt(r.value));
-
-  document.getElementById("result").innerHTML =
-    "<h3>Nilai: "+score+"</h3>";
+      <p>1. What can be inferred from Arga’s decision?</p>
+      <label><input type="radio" name="q1"> A. He avoided responsibility</label><br>
+      <label><input type="radio" name="q1"> B. He was overconfident</label><br>
+      <label><input type="radio" name="q1"> C. He was careless</label><br>
+      <label><input type="radio" name="q1"> D. He was inexperienced</label><br>
+      <label><input type="radio" name="q1"> E. He was dishonest</label>
+    </div>
+  `;
 }
 </script>
-</body>
-</html>
