@@ -12,10 +12,12 @@ button{padding:10px 20px;font-size:16px;cursor:pointer}
 #timer{font-weight:bold;color:#c0392b;margin-bottom:15px}
 </style>
 </head>
+
 <body>
 <div class="container">
 <h2>ULANGAN ONLINE – Bahasa Inggris (SMA X)</h2>
 
+<!-- LOGIN -->
 <div id="login">
 <p>Nama:</p>
 <input id="nama" style="width:100%">
@@ -25,6 +27,7 @@ button{padding:10px 20px;font-size:16px;cursor:pointer}
 <button onclick="start()">Mulai</button>
 </div>
 
+<!-- QUIZ -->
 <form id="quiz" class="hidden">
 <div id="timer">Sisa waktu: 60:00</div>
 <div id="questions"></div>
@@ -36,111 +39,13 @@ button{padding:10px 20px;font-size:16px;cursor:pointer}
 
 <script>
 // ================= CONFIG =================
-const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw-XEokgUPZu62S98yaiYWe8gSb4LrQV-b-itqwSIQ11EZOAydYUAHqumvwE_H3icU7/exec";
 let waktu = 60 * 60; // 60 menit
 let timerInterval;
-let selectedQuestions = [];
 
-/* ================= BANK SOAL ================= */
-const questionBank = [
-
-{
-type:"narrative",
-text:`One afternoon, Raka decided to explore a forest near his village.
-He had often heard stories about the forest, but he never visited it alone before.
-
-As he walked deeper, the air became cooler and the trees grew taller.
-Raka felt both excited and nervous as unfamiliar sounds surrounded him.
-
-Suddenly, he realized that he had lost his way.
-The path he followed was no longer visible, and panic started to rise.
-
-After calming himself, Raka remembered his grandfather’s advice.
-He observed the position of the sun and finally found his way home safely.`,
-questions:[
-{q:"What is the main idea of the story?",opts:["Raka followed his friends","Raka explored a forest alone","Raka camped in the forest","Raka hunted animals","Raka visited his grandfather"],a:1},
-{q:"Why did Raka feel nervous?",opts:["He met wild animals","He was tired","He heard unfamiliar sounds","It was raining","He was hungry"],a:2},
-{q:"How did Raka solve his problem?",opts:["He called his friend","He shouted for help","He followed the river","He observed nature","He waited"],a:3},
-{q:"What can be learned from the story?",opts:["Courage is useless","Nature is dangerous","Listening to advice is important","Forests should be avoided","Walking alone is fun"],a:2}
-]
-},
-
-{
-type:"recount",
-text:`Last holiday, my family and I went to a small beach in the south of the city.
-We left early in the morning to avoid traffic.
-
-When we arrived, the weather was sunny and the sea looked calm.
-My siblings and I played with the sand while our parents prepared food.
-
-After lunch, we swam together and collected seashells.
-Time passed quickly without us realizing it.
-
-In the afternoon, we returned home feeling tired but happy.
-It was a simple trip, yet it became a memorable experience.`,
-questions:[
-{q:"What is the text mainly about?",opts:["A school activity","A family trip","A camping event","A fishing competition","A beach cleanup"],a:1},
-{q:"Why did they leave early?",opts:["To swim longer","To avoid traffic","To meet friends","To see sunrise","To find shells"],a:1},
-{q:"What did the writer feel at the end?",opts:["Angry","Bored","Disappointed","Happy","Sleepy"],a:3},
-{q:"The word memorable means…",opts:["Easy to forget","Hard to do","Worth remembering","Very expensive","Dangerous"],a:2}
-]
-},
-
-{
-type:"descriptive",
-text:`My school library is one of my favorite places.
-It is located on the second floor of the main building.
-
-The room is wide and filled with wooden bookshelves.
-Various books are arranged neatly, from novels to reference books.
-
-Large windows allow sunlight to brighten the room.
-There are also comfortable chairs where students can read quietly.
-
-Because of its calm atmosphere, many students come to study here.
-The library helps us focus better on our learning.`,
-questions:[
-{q:"What is being described?",opts:["A classroom","A library","A bookstore","A laboratory","An office"],a:1},
-{q:"Where is the library located?",opts:["Near the gate","Behind the school","On the second floor","Beside the canteen","In the yard"],a:2},
-{q:"Why do students like the library?",opts:["It is noisy","It sells books","It has games","It is calm","It is crowded"],a:3},
-{q:"The word atmosphere is closest in meaning to…",opts:["Temperature","Air","Situation","Building","Furniture"],a:2}
-]
-},
-
-{
-type:"procedure",
-text:`Making a cup of tea is very easy.
-First, prepare a cup, tea bag, sugar, and hot water.
-
-Next, put the tea bag into the cup.
-Then, pour hot water into the cup carefully.
-
-After that, add sugar according to your taste.
-Stir the tea until the sugar dissolves completely.
-
-Finally, remove the tea bag and enjoy your tea.
-You can drink it while it is still warm.`,
-questions:[
-{q:"What is the purpose of the text?",opts:["To describe tea","To tell a story","To explain how to make tea","To compare drinks","To advertise tea"],a:2},
-{q:"What should be done after pouring hot water?",opts:["Remove the tea bag","Add sugar","Drink the tea","Boil water","Prepare cup"],a:1},
-{q:"Why should the tea be stirred?",opts:["To cool it","To dissolve sugar","To change color","To remove bag","To smell it"],a:1},
-{q:"The word dissolve means…",opts:["Disappear in liquid","Be frozen","Become solid","Be thrown away","Be mixed badly"],a:0}
-]
-}
-
-];
-/* ================= SHUFFLE ================= */
-function shuffle(arr){
-  for(let i=arr.length-1;i>0;i--){
-    const j=Math.floor(Math.random()*(i+1));
-    [arr[i],arr[j]]=[arr[j],arr[i]];
-  }
-}
-
-/* ================= START ================= */
+// ================= START =================
 function start(){
-  const nama=document.getElementById("nama").value.trim();
-  if(nama===""){
+  const nama = document.getElementById("nama").value.trim();
+  if(nama === ""){
     alert("Nama wajib diisi");
     return;
   }
@@ -148,72 +53,76 @@ function start(){
   document.getElementById("login").classList.add("hidden");
   document.getElementById("quiz").classList.remove("hidden");
 
-  selectedQuestions=[];
-
-  shuffle(questionBank);
-  questionBank.forEach(t=>{
-    shuffle(t.questions);
-    selectedQuestions.push(...t.questions);
-  });
-
-  selectedQuestions=selectedQuestions.slice(0,30);
-
-  renderQuestions();
   startTimer();
+  renderQuestions();
 }
 
-/* ================= TIMER ================= */
+// ================= TIMER =================
 function startTimer(){
-  timerInterval=setInterval(()=>{
-    let m=Math.floor(waktu/60);
-    let s=waktu%60;
-    document.getElementById("timer").innerText=
-      "Sisa waktu: "+m+":"+(s<10?"0":"")+s;
+  timerInterval = setInterval(()=>{
     waktu--;
-    if(waktu<0){
+    let m = Math.floor(waktu/60);
+    let s = waktu % 60;
+    document.getElementById("timer").innerText =
+      "Sisa waktu: " + m + ":" + (s<10?"0":"") + s;
+
+    if(waktu <= 0){
       clearInterval(timerInterval);
       submitQuiz();
     }
   },1000);
 }
 
-/* ================= RENDER ================= */
+// ================= SOAL =================
+const questionBank = [
+  {
+    text:"Dina always wanted to take part in a school storytelling competition...",
+    questions:[
+      {q:"Why did Dina practice every evening?",
+       opts:["She liked being alone","She was forced","She wanted to join a competition","She was bored","She forgot the story"],
+       a:2}
+    ]
+  }
+];
+
+// ================= RENDER =================
 function renderQuestions(){
-  let html="";
-  selectedQuestions.forEach((q,i)=>{
-    html+=`<div class="question">
-      <b>${i+1}. ${q.q}</b><br>`;
-    let opts=[...q.opts];
-    shuffle(opts);
-    opts.forEach(o=>{
-      let val=(o===q.opts[q.a])?1:0;
-      html+=`<label>
-        <input type="radio" name="q${i}" value="${val}"> ${o}
-      </label><br>`;
+  const qDiv = document.getElementById("questions");
+  qDiv.innerHTML="";
+  let no = 1;
+
+  questionBank.forEach(item=>{
+    let block = document.createElement("div");
+    block.className="question";
+    block.innerHTML = "<b>Text</b><br>"+item.text+"<br><br>";
+
+    item.questions.forEach(q=>{
+      block.innerHTML += `<b>${no}. ${q.q}</b><br>`;
+      q.opts.forEach((o,i)=>{
+        block.innerHTML += `
+          <label>
+            <input type="radio" name="q${no}" value="${i===q.a?1:0}">
+            ${String.fromCharCode(65+i)}. ${o}
+          </label><br>`;
+      });
+      no++;
     });
-    html+=`</div>`;
+
+    qDiv.appendChild(block);
   });
-  document.getElementById("questions").innerHTML=html;
 }
 
-/* ================= SUBMIT ================= */
+// ================= SUBMIT =================
 function submitQuiz(){
   clearInterval(timerInterval);
-  let score=0;
-  selectedQuestions.forEach((_,i)=>{
-    let q=document.querySelector(`input[name="q${i}"]:checked`);
-    if(q)score+=parseInt(q.value);
-  });
+  let score = 0;
 
-  let nilai=Math.round(score/selectedQuestions.length*100);
+  document.querySelectorAll("input[type=radio]:checked")
+    .forEach(r=>score+=parseInt(r.value));
 
-  fetch(WEB_APP_URL,{
-  method:"POST",
-  headers:{ "Content-Type":"application/json" },
-  body:JSON.stringify({
-    nama: document.getElementById("nama").value,
-    nilai: nilai,
-    durasi: 60,
-    waktuSelesai: new Date().toISOString()
-  })
-});
+  document.getElementById("result").innerHTML =
+    "<h3>Nilai: "+score+"</h3>";
+}
+</script>
+</body>
+</html>
