@@ -120,7 +120,7 @@ function selesai() {
 
   const nama = document.getElementById("nama").value;
 
-  fetch("URL_BARU_APPS_SCRIPT", {
+  fetch("https://script.google.com/macros/s/AKfycbyK6HaoN6caQRu90ygnjE8eAO4RNbKLDehiL_yVmX_PFM63TzXiSC1UBNFx4ToGkD_d6Q/exec", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
