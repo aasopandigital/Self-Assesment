@@ -5,17 +5,17 @@
 <title>Ujian Bahasa Inggris</title>
 
 <style>
-body { font-family: Arial; max-width: 900px; margin:auto; padding:20px; }
+body { font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }
 .hidden { display:none; }
-#timer { color:red; font-weight:bold; margin-bottom:20px; }
+#timer { color:red; font-weight:bold; margin-bottom:15px; }
+.question { margin-bottom:20px; }
 .passage {
   background:#f4f4f4;
   padding:15px;
   margin:25px 0;
-  border-left:5px solid #333;
+  border-left:4px solid #333;
 }
-.question { margin-bottom:18px; }
-button { padding:10px 25px; font-size:16px; cursor:pointer; }
+button { padding:10px 20px; font-size:16px; cursor:pointer; }
 </style>
 </head>
 
@@ -23,179 +23,211 @@ button { padding:10px 25px; font-size:16px; cursor:pointer; }
 
 <h2>Ujian Bahasa Inggris</h2>
 
+<!-- LOGIN -->
 <div id="login">
   <p>Masukkan nama sebelum mulai:</p>
   <input type="text" id="nama">
   <br><br>
-  <button onclick="start()">MULAI UJIAN</button>
+  <button type="button" onclick="start()">MULAI UJIAN</button>
 </div>
 
+<!-- QUIZ -->
 <div id="quiz" class="hidden">
   <div id="timer"></div>
   <div id="questions"></div>
 </div>
 
 <script>
+/* ================= UTIL ================= */
+function shuffle(arr){
+  for(let i=arr.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [arr[i],arr[j]]=[arr[j],arr[i]];
+  }
+  return arr;
+}
+
+/* ================= TIMER ================= */
 let waktu = 3600;
 let timerInterval;
 
-function start() {
-  if (!nama.value.trim()) return alert("Masukkan nama!");
-  login.style.display = "none";
-  quiz.classList.remove("hidden");
-  render();
+/* ================= START ================= */
+function start(){
+  if(!nama.value.trim()){ alert("Masukkan nama terlebih dahulu!"); return; }
+  document.getElementById("login").style.display="none";
+  document.getElementById("quiz").classList.remove("hidden");
+  renderQuestions();
   startTimer();
 }
 
-function startTimer() {
-  timerInterval = setInterval(() => {
-    let m = Math.floor(waktu/60);
-    let s = waktu%60;
-    timer.innerText = `Sisa waktu: ${m}:${s<10?"0":""}${s}`;
+function startTimer(){
+  timerInterval=setInterval(()=>{
+    let m=Math.floor(waktu/60), s=waktu%60;
+    timer.innerText=`Sisa waktu: ${m}:${s<10?"0":""}${s}`;
     waktu--;
-    if (waktu < 0) selesai();
+    if(waktu<0) selesai();
   },1000);
 }
 
-function opsi(arr){
-  const huruf = ["A","B","C","D","E"];
-  while(arr.length < 5) arr.push("Not stated in the text");
-  return arr.map((o,i)=>`${huruf[i]}. ${o}`);
+/* ================= PASSAGES & QUESTIONS ================= */
+const passages = [
+{
+text:`
+<b>TEXT 1</b><br><br>
+Paragraph 1: Learning styles vary significantly among students. Some learners process
+information visually, while others rely more on auditory or kinesthetic experiences.
+These differences influence how effectively students absorb and retain knowledge.<br><br>
+
+Paragraph 2: When students are unaware of their learning preferences, they often adopt
+inefficient study strategies. This may lead to frustration, reduced motivation, and
+poor academic performance over time.<br><br>
+
+Paragraph 3: Understanding personal learning styles enables learners to choose suitable
+methods and resources. This awareness allows them to maximize strengths while addressing
+weaknesses in their learning process.<br><br>
+
+Paragraph 4: Therefore, self-awareness in learning is not merely beneficial but essential
+for academic success and long-term intellectual development.
+`,
+questions:[
+{q:"The main idea of the text emphasizes…",o:["study duration","learning styles","school systems","teacher roles","technology"],a:1},
+{q:"Paragraph 2 suggests that lack of awareness leads to…",o:["discipline","efficiency","frustration","success","creativity"],a:2},
+{q:"Which strategy best reflects the writer’s view?",o:["Copying peers","Trial and error","Self-awareness","Avoiding failure","Studying longer"],a:2},
+{q:"The tone of the text is best described as…",o:["emotional","critical","informative","sarcastic","biased"],a:2},
+{q:"Which conclusion is most consistent with the text?",o:["All students learn the same way","Awareness improves learning","Teachers determine success","Failure should be avoided","Time is the key factor"],a:1},
+{q:"The writer would most likely agree that learning success depends on…",o:["luck","talent","self-understanding","competition","rules"],a:2},
+{q:"The purpose of paragraph 4 is to…",o:["criticize students","summarize ideas","give examples","show contrast","raise questions"],a:1},
+{q:"Which statement best evaluates the text?",o:["Descriptive only","Persuasive","Analytical","Narrative","Humorous"],a:2}
+]
+},
+
+{
+text:`
+<b>TEXT 2</b><br><br>
+Paragraph 1: Technology has reshaped modern education by providing instant access to
+information and flexible learning environments. Digital platforms allow students to
+study anytime and anywhere.<br><br>
+
+Paragraph 2: Despite its benefits, excessive reliance on technology can negatively affect
+critical thinking. Students may accept information without questioning its validity.<br><br>
+
+Paragraph 3: When learners depend too much on applications, problem-solving skills may
+decline. Independent reasoning becomes less practiced in digital-dependent environments.<br><br>
+
+Paragraph 4: Balanced use of technology, therefore, is necessary to ensure that digital
+tools enhance rather than replace intellectual engagement.
+`,
+questions:[
+{q:"The text mainly discusses…",o:["technology dangers","online schools","balanced technology use","teacher roles","digital tools"],a:2},
+{q:"Critical thinking decreases when students…",o:["read books","analyze deeply","depend excessively","discuss ideas","reflect"],a:2},
+{q:"Paragraph 3 implies that technology may reduce…",o:["speed","access","reasoning skills","motivation","comfort"],a:2},
+{q:"The writer’s attitude toward technology is…",o:["negative","positive","balanced","emotional","unclear"],a:2},
+{q:"The word <i>excessive</i> is closest in meaning to…",o:["limited","careful","too much","balanced","minimal"],a:2},
+{q:"Which recommendation best fits the text?",o:["Avoid technology","Rely fully on apps","Use technology wisely","Study online only","Ignore digital tools"],a:2},
+{q:"Paragraph 4 functions to…",o:["give warning","draw conclusion","present evidence","show contrast","add examples"],a:1},
+{q:"Which idea is NOT supported by the text?",o:["Technology helps learning","Balance is needed","Thinking skills matter","Apps replace reasoning","Access is easier"],a:3}
+]
+},
+
+{
+text:`
+<b>TEXT 3</b><br><br>
+Paragraph 1: Failure is often perceived negatively in academic contexts. Many students
+associate mistakes with weakness and embarrassment.<br><br>
+
+Paragraph 2: However, failure provides valuable feedback. Through mistakes, learners
+identify gaps in understanding and improve strategies.<br><br>
+
+Paragraph 3: Students who reflect on failure tend to develop resilience and adaptability.
+They approach challenges with greater confidence and insight.<br><br>
+
+Paragraph 4: Thus, failure should be viewed as an integral part of meaningful learning.
+`,
+questions:[
+{q:"Failure is described as…",o:["harmful","a setback","a learning tool","avoidable","unnecessary"],a:2},
+{q:"Paragraph 2 highlights failure as…",o:["punishment","feedback","weakness","stress","competition"],a:1},
+{q:"Students benefit from failure when they…",o:["ignore it","reflect","blame others","avoid risks","quit"],a:1},
+{q:"The tone of the text is…",o:["fearful","constructive","angry","neutral","hopeless"],a:1},
+{q:"The text encourages students to…",o:["avoid mistakes","reflect on errors","fear failure","compete more","study less"],a:1},
+{q:"Resilience is developed through…",o:["success","reflection","avoidance","luck","discipline"],a:1},
+{q:"Paragraph 3 mainly focuses on…",o:["definition","cause","effect","example","contrast"],a:2}
+]
+},
+
+{
+text:`
+<b>TEXT 4</b><br><br>
+Paragraph 1: Environmental damage caused by human activities often leads to irreversible
+consequences affecting ecosystems and human life.<br><br>
+
+Paragraph 2: Industrial pollution, deforestation, and waste mismanagement contribute to
+long-term environmental degradation worldwide.<br><br>
+
+Paragraph 3: Education plays a vital role in raising environmental awareness and promoting
+responsible behavior among communities.<br><br>
+
+Paragraph 4: Sustainable development can only be achieved when awareness is combined with
+effective policies and collective action.
+`,
+questions:[
+{q:"Irreversible means…",o:["temporary","avoidable","permanent","harmless","natural"],a:2},
+{q:"The best solution suggested is…",o:["ignoring issues","waiting","education and awareness","technology alone","punishment"],a:2},
+{q:"Paragraph 3 emphasizes the importance of…",o:["industry","education","economy","tradition","competition"],a:1},
+{q:"The main theme of the text is…",o:["pollution","technology","sustainability","business","culture"],a:2},
+{q:"The writer suggests environmental protection requires…",o:["individual action only","government only","collective effort","technology only","time"],a:2},
+{q:"Which statement best summarizes the text?",o:["Damage is unavoidable","Education solves all","Awareness and policy are essential","Nature heals itself","Industry should stop"],a:2},
+{q:"Paragraph 4 functions as…",o:["example","contrast","conclusion","definition","warning"],a:2}
+]
+}
+];
+
+/* ================= RENDER ================= */
+let allQuestions=[];
+passages.forEach(p=>{
+  p.questions.forEach(q=>{
+    q.o=shuffle(q.o.map((o,i)=>({text:o,idx:i})));
+    q.answer=q.o.findIndex(x=>x.idx===q.a);
+    allQuestions.push(q);
+  });
+});
+shuffle(allQuestions);
+
+function renderQuestions(){
+  let html="";
+  let qIndex=0;
+  passages.forEach(p=>{
+    html+=`<div class="passage">${p.text}</div>`;
+  });
+  allQuestions.slice(0,30).forEach(q=>{
+    html+=`<div class="question"><p>${++qIndex}. ${q.q}</p>`;
+    q.o.forEach((o,i)=>{
+      html+=`<label><input type="radio" name="q${qIndex}" value="${i}">
+      ${String.fromCharCode(65+i)}. ${o.text}</label><br>`;
+    });
+    html+=`</div>`;
+  });
+  html+=`<button onclick="selesai()">SELESAI UJIAN</button>`;
+  questions.innerHTML=html;
 }
 
-function soal(no, t, ops, kunci){
-  const opt = opsi(ops);
-  return `<div class="question"><p>${no}. ${t}</p>` +
-    opt.map((o,i)=>`
-      <label>
-        <input type="radio" name="q${no}" value="${i}">
-        ${o}
-      </label><br>`).join("") +
-    `</div>`;
-}
-
-function render() {
-questions.innerHTML = `
-
-<div class="passage">
-<b>Text 1</b><br><br>
-Learning styles differ from one student to another. Some students learn better
-through visuals, others through listening or practice.<br><br>
-Without understanding these preferences, students may apply ineffective strategies
-and lose motivation.<br><br>
-Self-awareness enables learners to study efficiently and confidently.<br><br>
-Therefore, recognizing learning styles helps students maximize their potential.
-</div>
-
-${soal(1,"The text mainly discusses…",
-["learning styles","exam systems","school rules","teacher authority"],0)}
-${soal(2,"Students may feel frustrated because they…",
-["lack intelligence","use ineffective strategies","study too much","ignore teachers"],1)}
-${soal(3,"Understanding learning styles helps students to…",
-["copy others","learn efficiently","avoid effort","depend on teachers"],1)}
-${soal(4,"The tone of the text is…",
-["emotional","informative","sarcastic","angry"],1)}
-${soal(5,"The paragraph implies that success requires…",
-["luck","self-awareness","competition","punishment"],1)}
-${soal(6,"An effective learner is someone who…",
-["studies randomly","knows personal strengths","copies friends","avoids planning"],1)}
-${soal(7,"The best conclusion is…",
-["All students learn the same way","Learning styles affect outcomes","Teachers control success","Time is the only factor"],1)}
-${soal(8,"The main risk mentioned is…",
-["overconfidence","wasted time","poor facilities","strict rules"],1)}
-
-<div class="passage">
-<b>Text 2</b><br><br>
-Technology has improved access to information in education.<br><br>
-However, excessive dependence on digital tools may reduce critical thinking.<br><br>
-Students may accept information without evaluation.<br><br>
-Thus, technology should support—not replace—independent thinking.
-</div>
-
-${soal(9,"The main issue discussed is…",
-["technology access","critical thinking","internet speed","online exams"],1)}
-${soal(10,"The writer’s attitude toward technology is…",
-["negative","positive","balanced","unclear"],2)}
-${soal(11,"Critical thinking decreases when students…",
-["analyze deeply","depend excessively","read books","discuss ideas"],1)}
-${soal(12,"The word excessive means…",
-["balanced","too much","limited","careful"],1)}
-${soal(13,"Which behavior reflects overdependence?",
-["manual calculation","using apps for every answer","group discussion","reflection"],1)}
-${soal(14,"The risk mentioned is…",
-["faster learning","loss of judgment","higher grades","creativity"],1)}
-${soal(15,"The text suggests students should…",
-["avoid technology","use it wisely","depend fully","ignore applications"],1)}
-${soal(16,"The best conclusion is…",
-["technology replaces thinking","balance is essential","apps solve all problems","teachers are unnecessary"],1)}
-
-<div class="passage">
-<b>Text 3</b><br><br>
-Failure is often seen as negative and embarrassing.<br><br>
-In fact, failure helps students identify weaknesses.<br><br>
-Reflection builds resilience and deeper understanding.<br><br>
-Failure should be viewed as a learning opportunity.
-</div>
-
-${soal(17,"Failure is described as…",
-["harmful","a learning tool","an ending","a weakness"],1)}
-${soal(18,"Students benefit from failure when they…",
-["ignore it","reflect on it","avoid risks","give up"],1)}
-${soal(19,"The paragraph emphasizes…",
-["success","reflection","competition","speed"],1)}
-${soal(20,"Which student fits the text?",
-["avoids challenges","evaluates mistakes","blames others","repeats errors"],1)}
-${soal(21,"The tone of the text is…",
-["hopeless","constructive","angry","fearful"],1)}
-${soal(22,"Reflection leads to…",
-["stress","resilience","confusion","delay"],1)}
-${soal(23,"The best conclusion is…",
-["failure guarantees success","growth requires reflection","mistakes must be hidden","challenges are harmful"],1)}
-
-<div class="passage">
-<b>Text 4</b><br><br>
-Environmental damage from human activities is increasing.<br><br>
-Many impacts are irreversible and long-term.<br><br>
-Education raises awareness of responsible behavior.<br><br>
-Sustainability depends on informed citizens.
-</div>
-
-${soal(24,"Irreversible consequences mean…",
-["temporary","permanent","avoidable","minor"],1)}
-${soal(25,"The best solution suggested is…",
-["waiting","public awareness","technology only","punishment"],1)}
-${soal(26,"The paragraph focuses on…",
-["industry","education","economy","competition"],1)}
-${soal(27,"The main concern is…",
-["present comfort","future generations","technology","schools"],1)}
-${soal(28,"Which action matches the text?",
-["overusing resources","environmental education","ignoring rules","delaying action"],1)}
-${soal(29,"The tone of the text is…",
-["humorous","urgent","neutral","sarcastic"],1)}
-${soal(30,"The best conclusion is…",
-["nature heals itself","awareness ensures sustainability","damage is acceptable","growth matters more"],1)}
-
-<br><button onclick="selesai()">SELESAI UJIAN</button>
-`;
-}
-
+/* ================= SELESAI ================= */
 function selesai(){
   clearInterval(timerInterval);
-  let score = 0;
-  for(let i=1;i<=30;i++){
-    const c = document.querySelector(`input[name="q${i}"]:checked`);
-    if(c && c.value=="1") score++;
-  }
+  let score=0;
+  allQuestions.slice(0,30).forEach((q,i)=>{
+    const c=document.querySelector(`input[name="q${i+1}"]:checked`);
+    if(c && +c.value===q.answer) score++;
+  });
 
-  const fd = new FormData();
-  fd.append("nama", nama.value);
-  fd.append("skor", score);
-  fd.append("total", 30);
+  const fd=new FormData();
+  fd.append("nama",nama.value);
+  fd.append("skor",score);
+  fd.append("total",30);
 
-  fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec",
-  { method:"POST", body:fd })
+  fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec",{method:"POST",body:fd})
   .then(()=>alert("Ujian selesai\nNilai: "+score))
-  .then(()=>location.reload());
+  .then(()=>location.reload())
+  .catch(()=>alert("Gagal mengirim nilai"));
 }
 </script>
 
