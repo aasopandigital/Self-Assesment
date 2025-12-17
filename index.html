@@ -57,128 +57,133 @@ function startTimer() {
   },1000);
 }
 
-function render() {
-  questions.innerHTML = `
+function opsi(arr){
+  const huruf = ["A","B","C","D","E"];
+  while(arr.length < 5) arr.push("Not stated in the text");
+  return arr.map((o,i)=>`${huruf[i]}. ${o}`);
+}
 
-<!-- ================= TEXT 1 ================= -->
+function soal(no, t, ops, kunci){
+  const opt = opsi(ops);
+  return `<div class="question"><p>${no}. ${t}</p>` +
+    opt.map((o,i)=>`
+      <label>
+        <input type="radio" name="q${no}" value="${i}">
+        ${o}
+      </label><br>`).join("") +
+    `</div>`;
+}
+
+function render() {
+questions.innerHTML = `
+
 <div class="passage">
 <b>Text 1</b><br><br>
-Learning styles differ from one student to another. Some students understand lessons
-better through visual materials, while others prefer listening or hands-on practice.
-These differences influence how effectively students absorb information.<br><br>
-
-When students fail to recognize their learning preferences, they often use methods
-that do not suit them. As a result, they may feel frustrated, unmotivated, or assume
-they are incapable of learning, even when the problem lies in the strategy used.<br><br>
-
-Self-awareness in learning helps students select appropriate techniques, manage time
-better, and remain motivated. Students who understand themselves tend to learn more
-efficiently and confidently.<br><br>
-
-Therefore, identifying learning styles is not about labeling students, but about
-helping them maximize their potential through effective and personalized strategies.
+Learning styles differ from one student to another. Some students learn better
+through visuals, others through listening or practice.<br><br>
+Without understanding these preferences, students may apply ineffective strategies
+and lose motivation.<br><br>
+Self-awareness enables learners to study efficiently and confidently.<br><br>
+Therefore, recognizing learning styles helps students maximize their potential.
 </div>
 
-${soal(1,"The text mainly discusses…",["learning styles","exam systems","school rules","teachers"],0)}
-${soal(2,"Students become frustrated because they…",["lack intelligence","use ineffective strategies","study too much","avoid exams"],1)}
-${soal(3,"Understanding learning styles helps students to…",["copy others","learn efficiently","avoid effort","depend on teachers"],1)}
-${soal(4,"The tone of the text is…",["emotional","informative","sarcastic","angry"],1)}
-${soal(5,"Which learner fits the text best?",["Random learner","Reflective learner","Passive learner","Unmotivated learner"],1)}
-${soal(6,"The paragraph implies success requires…",["luck","self-awareness","competition","punishment"],1)}
-${soal(7,"The best conclusion is…",["All students learn the same way","Learning styles affect outcomes","Teachers determine success","Time is the only factor"],1)}
-${soal(8,"An effective strategy means…",["using one method","choosing suitable methods","studying longer","avoiding feedback"],1)}
+${soal(1,"The text mainly discusses…",
+["learning styles","exam systems","school rules","teacher authority"],0)}
+${soal(2,"Students may feel frustrated because they…",
+["lack intelligence","use ineffective strategies","study too much","ignore teachers"],1)}
+${soal(3,"Understanding learning styles helps students to…",
+["copy others","learn efficiently","avoid effort","depend on teachers"],1)}
+${soal(4,"The tone of the text is…",
+["emotional","informative","sarcastic","angry"],1)}
+${soal(5,"The paragraph implies that success requires…",
+["luck","self-awareness","competition","punishment"],1)}
+${soal(6,"An effective learner is someone who…",
+["studies randomly","knows personal strengths","copies friends","avoids planning"],1)}
+${soal(7,"The best conclusion is…",
+["All students learn the same way","Learning styles affect outcomes","Teachers control success","Time is the only factor"],1)}
+${soal(8,"The main risk mentioned is…",
+["overconfidence","wasted time","poor facilities","strict rules"],1)}
 
-<!-- ================= TEXT 2 ================= -->
 <div class="passage">
 <b>Text 2</b><br><br>
-Technology has transformed education by making information easier to access.
-Students can learn anytime and anywhere using digital tools and online resources.<br><br>
-
-However, excessive dependence on technology can reduce students’ ability to think
-critically. When learners rely too much on applications, they often accept information
-without questioning its validity.<br><br>
-
-Critical thinking requires analysis, reflection, and evaluation. Overusing technology
-may discourage these processes, especially when students prioritize speed over
-understanding.<br><br>
-
-Thus, technology should support learning rather than replace independent thinking.
-Balance is essential to ensure meaningful learning experiences.
+Technology has improved access to information in education.<br><br>
+However, excessive dependence on digital tools may reduce critical thinking.<br><br>
+Students may accept information without evaluation.<br><br>
+Thus, technology should support—not replace—independent thinking.
 </div>
 
-${soal(9,"The main issue discussed is…",["technology access","critical thinking","internet speed","online exams"],1)}
-${soal(10,"The writer’s view on technology is…",["negative","positive","balanced","unclear"],2)}
-${soal(11,"Critical thinking decreases when students…",["analyze deeply","depend excessively","read books","discuss ideas"],1)}
-${soal(12,"The word excessive means…",["balanced","too much","limited","careful"],1)}
-${soal(13,"Which behavior reflects overdependence?",["Manual calculation","Using apps for every answer","Group discussion","Reflection"],1)}
-${soal(14,"The risk mentioned is…",["faster learning","loss of judgment","higher grades","creativity"],1)}
-${soal(15,"The paragraph suggests students should…",["avoid technology","use wisely","depend fully","ignore apps"],1)}
-${soal(16,"The best conclusion is…",["Technology replaces thinking","Balance is essential","Apps solve problems","Teachers are unnecessary"],1)}
+${soal(9,"The main issue discussed is…",
+["technology access","critical thinking","internet speed","online exams"],1)}
+${soal(10,"The writer’s attitude toward technology is…",
+["negative","positive","balanced","unclear"],2)}
+${soal(11,"Critical thinking decreases when students…",
+["analyze deeply","depend excessively","read books","discuss ideas"],1)}
+${soal(12,"The word excessive means…",
+["balanced","too much","limited","careful"],1)}
+${soal(13,"Which behavior reflects overdependence?",
+["manual calculation","using apps for every answer","group discussion","reflection"],1)}
+${soal(14,"The risk mentioned is…",
+["faster learning","loss of judgment","higher grades","creativity"],1)}
+${soal(15,"The text suggests students should…",
+["avoid technology","use it wisely","depend fully","ignore applications"],1)}
+${soal(16,"The best conclusion is…",
+["technology replaces thinking","balance is essential","apps solve all problems","teachers are unnecessary"],1)}
 
-<!-- ================= TEXT 3 ================= -->
 <div class="passage">
 <b>Text 3</b><br><br>
-Failure is often seen as something negative and embarrassing. Many students fear
-making mistakes because they associate failure with weakness or incompetence.<br><br>
-
-In reality, failure plays a crucial role in learning. Through mistakes, students can
-identify weaknesses and adjust their strategies to improve future performance.<br><br>
-
-Students who reflect on their failures tend to develop resilience. Instead of giving
-up, they learn to adapt, persist, and understand concepts more deeply.<br><br>
-
-Therefore, failure should be viewed as a learning opportunity rather than an endpoint
-in the educational process.
+Failure is often seen as negative and embarrassing.<br><br>
+In fact, failure helps students identify weaknesses.<br><br>
+Reflection builds resilience and deeper understanding.<br><br>
+Failure should be viewed as a learning opportunity.
 </div>
 
-${soal(17,"Failure is described as…",["harmful","a learning tool","an ending","a weakness"],1)}
-${soal(18,"Students benefit from failure when they…",["ignore it","reflect on it","avoid risks","give up"],1)}
-${soal(19,"The text emphasizes…",["success","reflection","competition","speed"],1)}
-${soal(20,"Which student fits the text?",["Avoids challenges","Evaluates mistakes","Blames others","Repeats errors"],1)}
-${soal(21,"The tone of the text is…",["hopeless","constructive","angry","fearful"],1)}
-${soal(22,"Reflection leads to…",["stress","resilience","confusion","delay"],1)}
-${soal(23,"The best conclusion is…",["Failure guarantees success","Growth needs reflection","Mistakes must be hidden","Challenges are harmful"],1)}
+${soal(17,"Failure is described as…",
+["harmful","a learning tool","an ending","a weakness"],1)}
+${soal(18,"Students benefit from failure when they…",
+["ignore it","reflect on it","avoid risks","give up"],1)}
+${soal(19,"The paragraph emphasizes…",
+["success","reflection","competition","speed"],1)}
+${soal(20,"Which student fits the text?",
+["avoids challenges","evaluates mistakes","blames others","repeats errors"],1)}
+${soal(21,"The tone of the text is…",
+["hopeless","constructive","angry","fearful"],1)}
+${soal(22,"Reflection leads to…",
+["stress","resilience","confusion","delay"],1)}
+${soal(23,"The best conclusion is…",
+["failure guarantees success","growth requires reflection","mistakes must be hidden","challenges are harmful"],1)}
 
-<!-- ================= TEXT 4 ================= -->
 <div class="passage">
 <b>Text 4</b><br><br>
-Environmental damage caused by human activities has increased significantly in
-recent years. Pollution, deforestation, and excessive resource consumption threaten
-natural ecosystems.<br><br>
-
-Many of these environmental impacts are irreversible. Once damage occurs, nature
-may require decades or even centuries to recover, if recovery is possible at all.<br><br>
-
-Education plays an essential role in raising public awareness. When people understand
-the consequences of their actions, they are more likely to behave responsibly.<br><br>
-
-Thus, sustainable development depends on informed citizens and responsible policies
-that protect the environment for future generations.
+Environmental damage from human activities is increasing.<br><br>
+Many impacts are irreversible and long-term.<br><br>
+Education raises awareness of responsible behavior.<br><br>
+Sustainability depends on informed citizens.
 </div>
 
-${soal(24,"Irreversible consequences mean…",["temporary","permanent","avoidable","minor"],1)}
-${soal(25,"The main solution suggested is…",["waiting","public awareness","technology only","punishment"],1)}
-${soal(26,"The paragraph focuses on…",["industry","education","economy","competition"],1)}
-${soal(27,"The main risk concerns…",["present comfort","future generations","technology","schools"],1)}
-${soal(28,"Which action aligns with the text?",["Overusing resources","Environmental education","Ignoring rules","Delaying action"],1)}
-${soal(29,"The tone of the text is…",["humorous","urgent","neutral","sarcastic"],1)}
-${soal(30,"The best conclusion is…",["Nature heals itself","Awareness ensures sustainability","Damage is acceptable","Growth matters more"],1)}
+${soal(24,"Irreversible consequences mean…",
+["temporary","permanent","avoidable","minor"],1)}
+${soal(25,"The best solution suggested is…",
+["waiting","public awareness","technology only","punishment"],1)}
+${soal(26,"The paragraph focuses on…",
+["industry","education","economy","competition"],1)}
+${soal(27,"The main concern is…",
+["present comfort","future generations","technology","schools"],1)}
+${soal(28,"Which action matches the text?",
+["overusing resources","environmental education","ignoring rules","delaying action"],1)}
+${soal(29,"The tone of the text is…",
+["humorous","urgent","neutral","sarcastic"],1)}
+${soal(30,"The best conclusion is…",
+["nature heals itself","awareness ensures sustainability","damage is acceptable","growth matters more"],1)}
 
 <br><button onclick="selesai()">SELESAI UJIAN</button>
 `;
-}
-
-function soal(no,t,o,a){
-  return `<div class="question"><p>${no}. ${t}</p>`+
-  o.map((x,i)=>`<label><input type="radio" name="q${no}" value="${i}"> ${x}</label><br>`).join("")+
-  `</div>`;
 }
 
 function selesai(){
   clearInterval(timerInterval);
   let score = 0;
   for(let i=1;i<=30;i++){
-    let c = document.querySelector(`input[name="q${i}"]:checked`);
+    const c = document.querySelector(`input[name="q${i}"]:checked`);
     if(c && c.value=="1") score++;
   }
 
