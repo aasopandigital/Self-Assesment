@@ -23,15 +23,13 @@ button { padding:10px 20px; font-size:16px; cursor:pointer; }
 
 <h2>Ujian Bahasa Inggris</h2>
 
-<!-- LOGIN -->
 <div id="login">
   <p>Masukkan nama sebelum mulai:</p>
   <input type="text" id="nama">
   <br><br>
-  <button type="button" onclick="start()">MULAI UJIAN</button>
+  <button onclick="start()">MULAI UJIAN</button>
 </div>
 
-<!-- QUIZ -->
 <div id="quiz" class="hidden">
   <div id="timer"></div>
   <div id="questions"></div>
@@ -69,143 +67,115 @@ function startTimer(){
   },1000);
 }
 
-/* ================= PASSAGES & QUESTIONS ================= */
+/* ================= DATA ================= */
 const passages = [
 {
+title:"TEXT 1",
 text:`
-<b>TEXT 1</b><br><br>
 Paragraph 1: Learning styles vary significantly among students. Some learners process
-information visually, while others rely more on auditory or kinesthetic experiences.
-These differences influence how effectively students absorb and retain knowledge.<br><br>
-
+information visually, while others rely on auditory or kinesthetic experiences.<br><br>
 Paragraph 2: When students are unaware of their learning preferences, they often adopt
-inefficient study strategies. This may lead to frustration, reduced motivation, and
-poor academic performance over time.<br><br>
-
-Paragraph 3: Understanding personal learning styles enables learners to choose suitable
-methods and resources. This awareness allows them to maximize strengths while addressing
-weaknesses in their learning process.<br><br>
-
-Paragraph 4: Therefore, self-awareness in learning is not merely beneficial but essential
-for academic success and long-term intellectual development.
+inefficient study strategies leading to frustration.<br><br>
+Paragraph 3: Understanding learning styles allows learners to maximize strengths and
+minimize weaknesses in their academic process.<br><br>
+Paragraph 4: Therefore, self-awareness is essential for long-term academic success.
 `,
 questions:[
-{q:"The main idea of the text emphasizes…",o:["study duration","learning styles","school systems","teacher roles","technology"],a:1},
-{q:"Paragraph 2 suggests that lack of awareness leads to…",o:["discipline","efficiency","frustration","success","creativity"],a:2},
-{q:"Which strategy best reflects the writer’s view?",o:["Copying peers","Trial and error","Self-awareness","Avoiding failure","Studying longer"],a:2},
-{q:"The tone of the text is best described as…",o:["emotional","critical","informative","sarcastic","biased"],a:2},
-{q:"Which conclusion is most consistent with the text?",o:["All students learn the same way","Awareness improves learning","Teachers determine success","Failure should be avoided","Time is the key factor"],a:1},
-{q:"The writer would most likely agree that learning success depends on…",o:["luck","talent","self-understanding","competition","rules"],a:2},
-{q:"The purpose of paragraph 4 is to…",o:["criticize students","summarize ideas","give examples","show contrast","raise questions"],a:1},
-{q:"Which statement best evaluates the text?",o:["Descriptive only","Persuasive","Analytical","Narrative","Humorous"],a:2}
+{q:"The main idea of the text emphasizes…",o:["Technology","Learning styles","Teachers","Schools","Discipline"],a:1},
+{q:"Paragraph 2 implies that students may fail because they…",o:["lack time","lack awareness","lack teachers","lack books","lack rules"],a:1},
+{q:"The writer would most likely agree that success depends on…",o:["Luck","Memory","Self-awareness","Competition","Talent"],a:2},
+{q:"Which strategy best reflects the text?",o:["Copy others","Self-reflection","Avoid failure","Study longer","Ignore mistakes"],a:1},
+{q:"The tone of the text is…",o:["Critical","Informative","Humorous","Sarcastic","Emotional"],a:1},
+{q:"Paragraph 3 mainly discusses…",o:["Problems","Effects","Solutions","Examples","Contrasts"],a:2},
+{q:"Which conclusion is most logical?",o:["All students are equal","Learning styles matter","Teachers decide success","Grades are absolute","Failure is final"],a:1},
+{q:"The purpose of the text is to…",o:["Entertain","Persuade","Explain","Warn","Criticize"],a:2}
 ]
 },
 
 {
+title:"TEXT 2",
 text:`
-<b>TEXT 2</b><br><br>
-Paragraph 1: Technology has reshaped modern education by providing instant access to
-information and flexible learning environments. Digital platforms allow students to
-study anytime and anywhere.<br><br>
-
-Paragraph 2: Despite its benefits, excessive reliance on technology can negatively affect
-critical thinking. Students may accept information without questioning its validity.<br><br>
-
-Paragraph 3: When learners depend too much on applications, problem-solving skills may
-decline. Independent reasoning becomes less practiced in digital-dependent environments.<br><br>
-
-Paragraph 4: Balanced use of technology, therefore, is necessary to ensure that digital
-tools enhance rather than replace intellectual engagement.
+Paragraph 1: Technology has transformed modern education by providing flexible access to
+information anytime and anywhere.<br><br>
+Paragraph 2: However, excessive reliance on technology may weaken students’ critical
+thinking skills.<br><br>
+Paragraph 3: When learners stop questioning information, their analytical abilities
+decline significantly.<br><br>
+Paragraph 4: Therefore, technology should support—not replace—thinking processes.
 `,
 questions:[
-{q:"The text mainly discusses…",o:["technology dangers","online schools","balanced technology use","teacher roles","digital tools"],a:2},
-{q:"Critical thinking decreases when students…",o:["read books","analyze deeply","depend excessively","discuss ideas","reflect"],a:2},
-{q:"Paragraph 3 implies that technology may reduce…",o:["speed","access","reasoning skills","motivation","comfort"],a:2},
-{q:"The writer’s attitude toward technology is…",o:["negative","positive","balanced","emotional","unclear"],a:2},
-{q:"The word <i>excessive</i> is closest in meaning to…",o:["limited","careful","too much","balanced","minimal"],a:2},
-{q:"Which recommendation best fits the text?",o:["Avoid technology","Rely fully on apps","Use technology wisely","Study online only","Ignore digital tools"],a:2},
-{q:"Paragraph 4 functions to…",o:["give warning","draw conclusion","present evidence","show contrast","add examples"],a:1},
-{q:"Which idea is NOT supported by the text?",o:["Technology helps learning","Balance is needed","Thinking skills matter","Apps replace reasoning","Access is easier"],a:3}
+{q:"The main topic of the text is…",o:["Education failure","Online schools","Balanced technology","Digital addiction","Teacher roles"],a:2},
+{q:"Excessive technology use may reduce…",o:["Access","Speed","Critical thinking","Motivation","Creativity"],a:2},
+{q:"Paragraph 3 emphasizes…",o:["Advantages","Risks","Solutions","Examples","Definitions"],a:1},
+{q:"The writer’s attitude toward technology is…",o:["Negative","Positive","Balanced","Unclear","Angry"],a:2},
+{q:"The word excessive is closest in meaning to…",o:["Limited","Controlled","Too much","Balanced","Minimal"],a:2},
+{q:"Which advice best fits the text?",o:["Avoid technology","Use wisely","Depend fully","Study offline only","Ignore apps"],a:1},
+{q:"Paragraph 4 serves as a…",o:["Warning","Conclusion","Example","Contrast","Cause"],a:1},
+{q:"Which statement is NOT supported?",o:["Technology helps learning","Balance is needed","Apps replace thinking","Critical skills matter","Access is easier"],a:2}
 ]
 },
 
 {
+title:"TEXT 3",
 text:`
-<b>TEXT 3</b><br><br>
-Paragraph 1: Failure is often perceived negatively in academic contexts. Many students
-associate mistakes with weakness and embarrassment.<br><br>
-
-Paragraph 2: However, failure provides valuable feedback. Through mistakes, learners
-identify gaps in understanding and improve strategies.<br><br>
-
-Paragraph 3: Students who reflect on failure tend to develop resilience and adaptability.
-They approach challenges with greater confidence and insight.<br><br>
-
-Paragraph 4: Thus, failure should be viewed as an integral part of meaningful learning.
+Paragraph 1: Failure is often seen as something negative in academic environments.<br><br>
+Paragraph 2: In reality, failure provides important feedback for improvement.<br><br>
+Paragraph 3: Students who reflect on failure develop resilience and adaptability.<br><br>
+Paragraph 4: Thus, failure should be treated as part of meaningful learning.
 `,
 questions:[
-{q:"Failure is described as…",o:["harmful","a setback","a learning tool","avoidable","unnecessary"],a:2},
-{q:"Paragraph 2 highlights failure as…",o:["punishment","feedback","weakness","stress","competition"],a:1},
-{q:"Students benefit from failure when they…",o:["ignore it","reflect","blame others","avoid risks","quit"],a:1},
-{q:"The tone of the text is…",o:["fearful","constructive","angry","neutral","hopeless"],a:1},
-{q:"The text encourages students to…",o:["avoid mistakes","reflect on errors","fear failure","compete more","study less"],a:1},
-{q:"Resilience is developed through…",o:["success","reflection","avoidance","luck","discipline"],a:1},
-{q:"Paragraph 3 mainly focuses on…",o:["definition","cause","effect","example","contrast"],a:2}
+{q:"Failure is viewed by the writer as…",o:["Harmful","Useless","Beneficial","Embarrassing","Final"],a:2},
+{q:"Paragraph 2 suggests failure helps students…",o:["Quit","Improve","Compete","Hide","Relax"],a:1},
+{q:"Resilience is developed through…",o:["Success","Luck","Reflection","Discipline","Avoidance"],a:2},
+{q:"The tone of the text is…",o:["Fearful","Constructive","Angry","Neutral","Sarcastic"],a:1},
+{q:"The main purpose of the text is to…",o:["Warn","Encourage","Criticize","Entertain","Describe"],a:1},
+{q:"Paragraph 3 mainly discusses…",o:["Causes","Effects","Definitions","Examples","Warnings"],a:1},
+{q:"Which conclusion best fits?",o:["Failure must be avoided","Failure supports learning","Only success matters","Mistakes are shameful","Grades define ability"],a:1}
 ]
 },
 
 {
+title:"TEXT 4",
 text:`
-<b>TEXT 4</b><br><br>
-Paragraph 1: Environmental damage caused by human activities often leads to irreversible
-consequences affecting ecosystems and human life.<br><br>
-
-Paragraph 2: Industrial pollution, deforestation, and waste mismanagement contribute to
-long-term environmental degradation worldwide.<br><br>
-
-Paragraph 3: Education plays a vital role in raising environmental awareness and promoting
-responsible behavior among communities.<br><br>
-
-Paragraph 4: Sustainable development can only be achieved when awareness is combined with
-effective policies and collective action.
+Paragraph 1: Environmental damage caused by humans often results in irreversible effects.<br><br>
+Paragraph 2: Pollution and deforestation accelerate environmental degradation globally.<br><br>
+Paragraph 3: Education plays a key role in increasing environmental awareness.<br><br>
+Paragraph 4: Sustainable development requires awareness, policy, and collective action.
 `,
 questions:[
-{q:"Irreversible means…",o:["temporary","avoidable","permanent","harmless","natural"],a:2},
-{q:"The best solution suggested is…",o:["ignoring issues","waiting","education and awareness","technology alone","punishment"],a:2},
-{q:"Paragraph 3 emphasizes the importance of…",o:["industry","education","economy","tradition","competition"],a:1},
-{q:"The main theme of the text is…",o:["pollution","technology","sustainability","business","culture"],a:2},
-{q:"The writer suggests environmental protection requires…",o:["individual action only","government only","collective effort","technology only","time"],a:2},
-{q:"Which statement best summarizes the text?",o:["Damage is unavoidable","Education solves all","Awareness and policy are essential","Nature heals itself","Industry should stop"],a:2},
-{q:"Paragraph 4 functions as…",o:["example","contrast","conclusion","definition","warning"],a:2}
+{q:"Irreversible means…",o:["Temporary","Permanent","Repairable","Minor","Natural"],a:1},
+{q:"The best solution suggested is…",o:["Ignore issues","Education","Punishment","Technology only","Waiting"],a:1},
+{q:"Paragraph 3 emphasizes…",o:["Industry","Education","Economy","Politics","Tradition"],a:1},
+{q:"The main theme of the text is…",o:["Business","Culture","Sustainability","Technology","Tourism"],a:2},
+{q:"Environmental protection requires…",o:["Individuals only","Government only","Collective effort","Time only","Rules only"],a:2},
+{q:"Paragraph 4 functions as a…",o:["Example","Contrast","Conclusion","Definition","Warning"],a:2}
 ]
 }
 ];
 
 /* ================= RENDER ================= */
-let allQuestions=[];
-passages.forEach(p=>{
-  p.questions.forEach(q=>{
-    q.o=shuffle(q.o.map((o,i)=>({text:o,idx:i})));
-    q.answer=q.o.findIndex(x=>x.idx===q.a);
-    allQuestions.push(q);
-  });
-});
-shuffle(allQuestions);
-
 function renderQuestions(){
   let html="";
-  let qIndex=0;
+  let no=1;
+
   passages.forEach(p=>{
-    html+=`<div class="passage">${p.text}</div>`;
-  });
-  allQuestions.slice(0,30).forEach(q=>{
-    html+=`<div class="question"><p>${++qIndex}. ${q.q}</p>`;
-    q.o.forEach((o,i)=>{
-      html+=`<label><input type="radio" name="q${qIndex}" value="${i}">
-      ${String.fromCharCode(65+i)}. ${o.text}</label><br>`;
+    html+=`<div class="passage"><b>${p.title}</b><br><br>${p.text}</div>`;
+
+    shuffle(p.questions);
+    p.questions.forEach(q=>{
+      q.options=shuffle(q.o.map((t,i)=>({t,idx:i})));
+      q.answer=q.options.findIndex(x=>x.idx===q.a);
+
+      html+=`<div class="question"><p>${no}. ${q.q}</p>`;
+      q.options.forEach((op,i)=>{
+        html+=`<label><input type="radio" name="q${no}" value="${i}">
+        ${String.fromCharCode(65+i)}. ${op.t}</label><br>`;
+      });
+      html+=`</div>`;
+      no++;
     });
-    html+=`</div>`;
   });
+
   html+=`<button onclick="selesai()">SELESAI UJIAN</button>`;
   questions.innerHTML=html;
 }
@@ -214,9 +184,14 @@ function renderQuestions(){
 function selesai(){
   clearInterval(timerInterval);
   let score=0;
-  allQuestions.slice(0,30).forEach((q,i)=>{
-    const c=document.querySelector(`input[name="q${i+1}"]:checked`);
-    if(c && +c.value===q.answer) score++;
+  let idx=1;
+
+  passages.forEach(p=>{
+    p.questions.forEach(q=>{
+      const c=document.querySelector(`input[name="q${idx}"]:checked`);
+      if(c && +c.value===q.answer) score++;
+      idx++;
+    });
   });
 
   const fd=new FormData();
@@ -224,7 +199,8 @@ function selesai(){
   fd.append("skor",score);
   fd.append("total",30);
 
-  fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec",{method:"POST",body:fd})
+  fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec",
+  {method:"POST",body:fd})
   .then(()=>alert("Ujian selesai\nNilai: "+score))
   .then(()=>location.reload())
   .catch(()=>alert("Gagal mengirim nilai"));
