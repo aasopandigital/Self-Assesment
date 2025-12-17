@@ -39,19 +39,14 @@ button { padding:10px 25px; font-size:16px; cursor:pointer; }
 let waktu = 3600;
 let timerInterval;
 
-/* ===== START ===== */
 function start() {
-  if (!nama.value.trim()) {
-    alert("Masukkan nama!");
-    return;
-  }
+  if (!nama.value.trim()) return alert("Masukkan nama!");
   login.style.display = "none";
   quiz.classList.remove("hidden");
   render();
   startTimer();
 }
 
-/* ===== TIMER ===== */
 function startTimer() {
   timerInterval = setInterval(() => {
     let m = Math.floor(waktu/60);
@@ -62,17 +57,26 @@ function startTimer() {
   },1000);
 }
 
-/* ===== RENDER ===== */
 function render() {
-  const q = document.getElementById("questions");
-  q.innerHTML = `
+  questions.innerHTML = `
+
 <!-- ================= TEXT 1 ================= -->
 <div class="passage">
-<b>Text 1</b><br>
-Learning styles vary among students and influence academic success. Some learners
-understand lessons better through visual materials, while others prefer listening
-or direct practice. When students recognize their learning preferences, they can
-apply effective strategies and avoid unnecessary frustration.
+<b>Text 1</b><br><br>
+Learning styles differ from one student to another. Some students understand lessons
+better through visual materials, while others prefer listening or hands-on practice.
+These differences influence how effectively students absorb information.<br><br>
+
+When students fail to recognize their learning preferences, they often use methods
+that do not suit them. As a result, they may feel frustrated, unmotivated, or assume
+they are incapable of learning, even when the problem lies in the strategy used.<br><br>
+
+Self-awareness in learning helps students select appropriate techniques, manage time
+better, and remain motivated. Students who understand themselves tend to learn more
+efficiently and confidently.<br><br>
+
+Therefore, identifying learning styles is not about labeling students, but about
+helping them maximize their potential through effective and personalized strategies.
 </div>
 
 ${soal(1,"The text mainly discusses…",["learning styles","exam systems","school rules","teachers"],0)}
@@ -86,11 +90,20 @@ ${soal(8,"An effective strategy means…",["using one method","choosing suitable
 
 <!-- ================= TEXT 2 ================= -->
 <div class="passage">
-<b>Text 2</b><br>
-Technology has transformed education by providing easy access to information.
-However, excessive dependence on digital tools can weaken critical thinking.
-Students who rely too much on applications often accept information without
-questioning its accuracy.
+<b>Text 2</b><br><br>
+Technology has transformed education by making information easier to access.
+Students can learn anytime and anywhere using digital tools and online resources.<br><br>
+
+However, excessive dependence on technology can reduce students’ ability to think
+critically. When learners rely too much on applications, they often accept information
+without questioning its validity.<br><br>
+
+Critical thinking requires analysis, reflection, and evaluation. Overusing technology
+may discourage these processes, especially when students prioritize speed over
+understanding.<br><br>
+
+Thus, technology should support learning rather than replace independent thinking.
+Balance is essential to ensure meaningful learning experiences.
 </div>
 
 ${soal(9,"The main issue discussed is…",["technology access","critical thinking","internet speed","online exams"],1)}
@@ -104,10 +117,18 @@ ${soal(16,"The best conclusion is…",["Technology replaces thinking","Balance i
 
 <!-- ================= TEXT 3 ================= -->
 <div class="passage">
-<b>Text 3</b><br>
-Failure is often seen as negative, yet it plays an important role in learning.
-Through failure, students identify weaknesses and improve strategies. Those who
-reflect on mistakes develop resilience and deeper understanding.
+<b>Text 3</b><br><br>
+Failure is often seen as something negative and embarrassing. Many students fear
+making mistakes because they associate failure with weakness or incompetence.<br><br>
+
+In reality, failure plays a crucial role in learning. Through mistakes, students can
+identify weaknesses and adjust their strategies to improve future performance.<br><br>
+
+Students who reflect on their failures tend to develop resilience. Instead of giving
+up, they learn to adapt, persist, and understand concepts more deeply.<br><br>
+
+Therefore, failure should be viewed as a learning opportunity rather than an endpoint
+in the educational process.
 </div>
 
 ${soal(17,"Failure is described as…",["harmful","a learning tool","an ending","a weakness"],1)}
@@ -120,10 +141,19 @@ ${soal(23,"The best conclusion is…",["Failure guarantees success","Growth need
 
 <!-- ================= TEXT 4 ================= -->
 <div class="passage">
-<b>Text 4</b><br>
-Environmental damage caused by human activities often leads to irreversible
-consequences. Raising public awareness through education and responsible policies
-is essential for sustainable development.
+<b>Text 4</b><br><br>
+Environmental damage caused by human activities has increased significantly in
+recent years. Pollution, deforestation, and excessive resource consumption threaten
+natural ecosystems.<br><br>
+
+Many of these environmental impacts are irreversible. Once damage occurs, nature
+may require decades or even centuries to recover, if recovery is possible at all.<br><br>
+
+Education plays an essential role in raising public awareness. When people understand
+the consequences of their actions, they are more likely to behave responsibly.<br><br>
+
+Thus, sustainable development depends on informed citizens and responsible policies
+that protect the environment for future generations.
 </div>
 
 ${soal(24,"Irreversible consequences mean…",["temporary","permanent","avoidable","minor"],1)}
@@ -138,16 +168,12 @@ ${soal(30,"The best conclusion is…",["Nature heals itself","Awareness ensures 
 `;
 }
 
-/* ===== SOAL TEMPLATE ===== */
-function soal(no, t, o, a){
-  return `
-  <div class="question">
-    <p>${no}. ${t}</p>
-    ${o.map((x,i)=>`<label><input type="radio" name="q${no}" value="${i}"> ${x}</label><br>`).join("")}
-  </div>`;
+function soal(no,t,o,a){
+  return `<div class="question"><p>${no}. ${t}</p>`+
+  o.map((x,i)=>`<label><input type="radio" name="q${no}" value="${i}"> ${x}</label><br>`).join("")+
+  `</div>`;
 }
 
-/* ===== FINISH ===== */
 function selesai(){
   clearInterval(timerInterval);
   let score = 0;
