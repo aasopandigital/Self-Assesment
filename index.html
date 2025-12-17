@@ -1,73 +1,55 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Ujian Bahasa Inggris</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<title>Ujian Bahasa Inggris</title>
 
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      max-width: 800px;
-      margin: auto;
-      padding: 20px;
-    }
-    .hidden { display:none; }
-    .question { margin-bottom: 25px; }
-    #timer {
-      font-weight: bold;
-      color: red;
-      margin-bottom: 20px;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-  </style>
+<style>
+body { font-family: Arial; max-width: 800px; margin: auto; padding: 20px; }
+.hidden { display:none; }
+#timer { color:red; font-weight:bold; margin-bottom:15px; }
+.question { margin-bottom:20px; }
+button { padding:10px 20px; font-size:16px; }
+</style>
 </head>
 
 <body>
 
 <h2>Ujian Bahasa Inggris</h2>
 
-<!-- LOGIN -->
 <div id="login">
   <p>Masukkan nama sebelum mulai:</p>
-  <input type="text" id="nama" placeholder="Nama lengkap">
+  <input type="text" id="nama">
   <br><br>
-  <button type="button" onclick="start()">MULAI UJIAN</button>
+  <button onclick="start()">MULAI UJIAN</button>
 </div>
 
-<!-- QUIZ -->
 <div id="quiz" class="hidden">
   <div id="timer"></div>
   <div id="questions"></div>
 </div>
 
 <script>
-/* ================== VARIABEL ================== */
-let waktu = 60 * 60;
+let waktu = 3600;
 let timerInterval;
 
-/* ================== CBT STORAGE ================== */
+/* ===== CBT PROTECTION ===== */
+window.onbeforeunload = () => "Ujian sedang berlangsung.";
+
 function setExamStarted() {
-  localStorage.setItem("examStarted", "yes");
+  localStorage.setItem("examStarted","yes");
 }
 
 function clearExamStatus() {
   localStorage.removeItem("examStarted");
 }
 
-/* ================== START UJIAN ================== */
+/* ===== START ===== */
 function start() {
   const nama = document.getElementById("nama").value.trim();
-  if (!nama) {
-    alert("Silakan masukkan nama terlebih dahulu");
-    return;
-  }
+  if (!nama) return alert("Masukkan nama!");
 
-  setExamStarted(); // ⬅️ KUNCI CBT (AMAN)
+  setExamStarted();
 
   document.getElementById("login").style.display = "none";
   document.getElementById("quiz").classList.remove("hidden");
@@ -76,104 +58,58 @@ function start() {
   startTimer();
 }
 
-/* ================== TIMER ================== */
+/* ===== TIMER ===== */
 function startTimer() {
   timerInterval = setInterval(() => {
-    let m = Math.floor(waktu / 60);
-    let s = waktu % 60;
-
-    document.getElementById("timer").innerText =
-      "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
-
+    let m = Math.floor(waktu/60);
+    let s = waktu%60;
+    timer.innerText = `Sisa waktu: ${m}:${s<10?"0":""}${s}`;
     waktu--;
-    if (waktu < 0) {
-      clearInterval(timerInterval);
-      selesai();
-    }
-  }, 1000);
+    if (waktu < 0) selesai();
+  },1000);
 }
 
-/* ================== SOAL ================== */
+/* ===== SOAL ===== */
 const questions = [
-  {
-    q: "She ____ to school every day.",
-    options: ["go", "goes", "went", "going", "gone"],
-    answer: 1
-  }
+  { q:"She ____ to school every day.", options:["go","goes","went","going","gone"], answer:1 }
 ];
 
-/* ================== RENDER SOAL ================== */
 function renderQuestions() {
   let html = "";
-
-  questions.forEach((item, index) => {
-    html += `<div class="question">
-      <p>${index + 1}. ${item.q}</p>`;
-
-    item.options.forEach((opt, i) => {
-      html += `
-        <label>
-          <input type="radio" name="q${index}" value="${i}">
-          ${String.fromCharCode(65 + i)}. ${opt}
-        </label><br>`;
+  questions.forEach((q,i)=>{
+    html += `<p>${i+1}. ${q.q}</p>`;
+    q.options.forEach((o,j)=>{
+      html += `<label><input type="radio" name="q${i}" value="${j}"> ${o}</label><br>`;
     });
-
-    html += `</div>`;
   });
-
-  html += `<button type="button" onclick="selesai()">SELESAI UJIAN</button>`;
-  document.getElementById("questions").innerHTML = html;
+  html += `<br><button onclick="selesai()">SELESAI</button>`;
+  questionsDiv.innerHTML = html;
 }
 
-/* ================== SELESAI + FETCH ================== */
+/* ===== SELESAI ===== */
 function selesai() {
   clearInterval(timerInterval);
   clearExamStatus();
 
   let score = 0;
-  questions.forEach((q, i) => {
-    const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    if (selected && parseInt(selected.value) === q.answer) score++;
+  questions.forEach((q,i)=>{
+    const c = document.querySelector(`input[name="q${i}"]:checked`);
+    if (c && +c.value === q.answer) score++;
   });
 
-  const nama = document.getElementById("nama").value;
+  const fd = new FormData();
+  fd.append("nama", nama.value);
+  fd.append("skor", score);
+  fd.append("total", questions.length);
 
-  const formData = new FormData();
-  formData.append("nama", nama);
-  formData.append("skor", score);
-  formData.append("total", questions.length);
-
-  fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec", {
-    method: "POST",
-    body: formData
-  })
-  .then(() => {
-    alert("Ujian selesai!\nNilai kamu: " + score);
-    location.reload();
-  })
-  .catch(() => {
-    alert("Gagal mengirim nilai");
-  });
+  fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec", { method:"POST", body:fd })
+    .then(()=>alert("Ujian selesai\nNilai: "+score))
+    .then(()=>location.reload())
+    .catch(()=>alert("Gagal mengirim nilai"));
 }
 
-/* ================== CBT PROTECTION ================== */
-
-// Cegah refresh / back
-window.onbeforeunload = function () {
-  if (localStorage.getItem("examStarted") === "yes") {
-    return "Ujian sedang berlangsung.";
-  }
-};
-
-// Jika refresh saat ujian → lanjut
-window.onload = function () {
-  if (localStorage.getItem("examStarted") === "yes") {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("quiz").classList.remove("hidden");
-    renderQuestions();
-    startTimer();
-  }
-};
+/* ===== RESUME ===== */
+if (localStorage.getItem("examStarted")==="yes") start();
 </script>
 
 </body>
