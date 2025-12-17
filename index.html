@@ -9,6 +9,12 @@ body { font-family: Arial; max-width: 800px; margin: auto; padding: 20px; }
 .hidden { display:none; }
 #timer { color:red; font-weight:bold; margin-bottom:15px; }
 .question { margin-bottom:20px; }
+.passage {
+  background:#f4f4f4;
+  padding:15px;
+  margin:20px 0;
+  border-left:4px solid #444;
+}
 button { padding:10px 20px; font-size:16px; cursor:pointer; }
 </style>
 </head>
@@ -32,34 +38,19 @@ button { padding:10px 20px; font-size:16px; cursor:pointer; }
 </div>
 
 <script>
-/* ================= VARIABEL ================= */
 let waktu = 3600;
 let timerInterval;
 
-/* ================= CBT PROTECTION ================= */
-window.onbeforeunload = function () {
-  return "Ujian sedang berlangsung.";
-};
-
-function setExamStarted() {
-  localStorage.setItem("examStarted","yes");
-}
-
-function clearExamStatus() {
-  localStorage.removeItem("examStarted");
-}
-
 /* ================= START ================= */
 function start() {
-  const namaInput = document.getElementById("nama");
-  if (!namaInput.value.trim()) {
+  if (!document.getElementById("nama").value.trim()) {
     alert("Masukkan nama terlebih dahulu!");
     return;
   }
 
-  setExamStarted();
+  localStorage.setItem("examStarted","yes");
 
-  document.getElementById("login").style.display = "none";
+  document.getElementById("login").style.display="none";
   document.getElementById("quiz").classList.remove("hidden");
 
   renderQuestions();
@@ -69,60 +60,99 @@ function start() {
 /* ================= TIMER ================= */
 function startTimer() {
   timerInterval = setInterval(() => {
-    let m = Math.floor(waktu / 60);
-    let s = waktu % 60;
+    let m = Math.floor(waktu/60);
+    let s = waktu%60;
     document.getElementById("timer").innerText =
-      "Sisa waktu: " + m + ":" + (s < 10 ? "0" : "") + s;
+      `Sisa waktu: ${m}:${s<10?"0":""}${s}`;
     waktu--;
     if (waktu < 0) selesai();
-  }, 1000);
+  },1000);
 }
 
-/* ================= SOAL (30 BUTIR) ================= */
-const questions = [
-  { q:"She ____ to school every day.", options:["go","goes","went","going","gone"], answer:1 },
-  { q:"The paragraph suggests that effective learning depends on…", options:["time spent","teacher quality","learning style","age","memory"], answer:2 },
-  { q:"What can be inferred about students who understand themselves?", options:["They study longer","They learn better","They fail exams","They copy others","They avoid study"], answer:1 },
-  { q:"The writer’s attitude toward long study hours is…", options:["supportive","critical","negative","emotional","unclear"], answer:1 },
-  { q:"Excessive social media use may result in…", options:["better skills","stronger friendships","weaker social skills","higher grades","confidence"], answer:2 },
-  { q:"Which behavior supports the text?", options:["Face-to-face discussion","Group study","Online chatting only","Reading books","Sports"], answer:2 },
-  { q:"Environmental damage is described as irreversible meaning…", options:["temporary","permanent","harmless","natural","avoidable"], answer:1 },
-  { q:"What is the best solution implied?", options:["Ignore issues","Wait","Public awareness","Technology alone","Do nothing"], answer:2 },
-  { q:"Online learning requires students to…", options:["depend on teachers","manage time","avoid schedules","skip lessons","study less"], answer:1 },
-  { q:"Which student benefits most from online learning?", options:["Lazy","Undisciplined","Independent","Passive","Unmotivated"], answer:2 },
-  { q:"Part-time jobs can be beneficial if students…", options:["work more","ignore study","plan well","skip classes","sleep less"], answer:2 },
-  { q:"Without planning, students may experience…", options:["success","relaxation","stress","motivation","focus"], answer:2 },
-  { q:"Overreliance on technology may reduce…", options:["speed","creativity","critical thinking","comfort","access"], answer:2 },
-  { q:"Which action reflects overreliance?", options:["Manual calculation","Independent thinking","Using apps for all decisions","Discussion","Reading"], answer:2 },
-  { q:"Reading widely helps people to…", options:["memorize","think critically","sleep","waste time","avoid ideas"], answer:1 },
-  { q:"Frequent readers tend to have…", options:["narrow views","broad perspectives","confusion","stress","fear"], answer:1 },
-  { q:"Failure is described as…", options:["negative","useless","learning tool","end","shame"], answer:2 },
-  { q:"Which behavior matches the text?", options:["Ignoring mistakes","Reflecting on errors","Giving up","Blaming others","Avoiding risk"], answer:1 },
-  { q:"The tone of the text about failure is…", options:["fearful","constructive","angry","neutral","hopeless"], answer:1 },
-  { q:"Critical thinking is reduced when people…", options:["read","discuss","depend excessively","analyze","practice"], answer:2 },
-  { q:"Good time management helps students to…", options:["relax","fail","balance tasks","avoid study","waste time"], answer:2 },
-  { q:"Which statement best evaluates online learning?", options:["Always effective","Always difficult","Effective with discipline","Useless","Easy"], answer:2 },
-  { q:"Environmental awareness should be built through…", options:["punishment","policy and education","ignorance","delay","media only"], answer:1 },
-  { q:"The main cause of declining performance is…", options:["talent","poor planning","luck","teachers","internet"], answer:1 },
-  { q:"The text encourages students to…", options:["copy others","know themselves","study longer","avoid failure","skip rest"], answer:1 },
-  { q:"Balanced technology use means…", options:["no technology","full dependence","wise usage","long screen time","avoid thinking"], answer:2 },
-  { q:"A critical reader usually…", options:["accepts blindly","questions ideas","avoids reading","memorizes only","ignores context"], answer:1 },
-  { q:"Failure becomes useful when someone…", options:["forgets it","reflects","denies","blames","escapes"], answer:1 },
-  { q:"Which conclusion fits all texts?", options:["Success is instant","Effort is useless","Awareness and balance matter","Rules limit growth","Technology solves all"], answer:2 },
-  { q:"The overall theme emphasizes…", options:["memorization","discipline and reflection","luck","competition","speed"], answer:1 }
+/* ================= TEXT & SOAL ================= */
+const passages = [
+  {
+    text: `
+    <b>Text 1</b><br>
+    Learning styles differ from one student to another. Some students learn best
+    through visual materials, while others prefer auditory explanations. 
+    Understanding one’s own learning preference allows students to study more 
+    effectively and avoid unnecessary frustration. Without this awareness, 
+    learners often waste time using ineffective strategies.
+    `,
+    questions: [
+      { q:"The paragraph mainly discusses…", options:["teaching methods","learning styles","school rules","student age","exam systems"], answer:1 },
+      { q:"Students learn better when they…", options:["copy others","study longer","understand themselves","avoid planning","use one method"], answer:2 },
+      { q:"Ineffective strategies may cause…", options:["success","motivation","wasted time","discipline","confidence"], answer:2 },
+      { q:"The tone of the text is…", options:["critical","informative","emotional","negative","sarcastic"], answer:1 }
+    ]
+  },
+
+  {
+    text: `
+    <b>Text 2</b><br>
+    Technology has transformed education by making information more accessible.
+    However, excessive dependence on digital tools may reduce students’ critical
+    thinking skills. When learners rely too much on applications, they often stop
+    questioning information and accept answers without evaluation.
+    `,
+    questions: [
+      { q:"The paragraph suggests that technology…", options:["is harmful","should be avoided","must be used wisely","replaces teachers","limits learning"], answer:2 },
+      { q:"Critical thinking decreases when students…", options:["analyze deeply","read books","depend excessively","discuss ideas","reflect"], answer:2 },
+      { q:"The word <i>excessive</i> is closest in meaning to…", options:["limited","balanced","too much","careful","minimal"], answer:2 },
+      { q:"The writer’s attitude toward technology is…", options:["fully positive","fully negative","balanced","unclear","emotional"], answer:2 }
+    ]
+  },
+
+  {
+    text: `
+    <b>Text 3</b><br>
+    Failure is often viewed negatively, yet it plays an essential role in learning.
+    Through failure, individuals recognize weaknesses and improve strategies.
+    Students who reflect on mistakes tend to develop resilience and deeper
+    understanding compared to those who avoid challenges.
+    `,
+    questions: [
+      { q:"Failure is described as…", options:["harmful","useless","a learning tool","a weakness","an ending"], answer:2 },
+      { q:"Students benefit from failure when they…", options:["ignore it","reflect","blame others","give up","avoid risks"], answer:1 },
+      { q:"The paragraph implies that reflection leads to…", options:["fear","resilience","confusion","delay","stress"], answer:1 },
+      { q:"The tone of the text is…", options:["fearful","constructive","angry","hopeless","neutral"], answer:1 }
+    ]
+  },
+
+  {
+    text: `
+    <b>Text 4</b><br>
+    Environmental damage caused by human activities often results in irreversible
+    consequences. Raising public awareness through education and responsible
+    policies is essential to ensure sustainable development for future generations.
+    `,
+    questions: [
+      { q:"Irreversible means…", options:["temporary","avoidable","permanent","harmless","natural"], answer:2 },
+      { q:"The best solution suggested is…", options:["ignoring issues","waiting","public awareness","technology alone","doing nothing"], answer:2 },
+      { q:"The paragraph emphasizes the importance of…", options:["industry","education","punishment","economy","delay"], answer:1 },
+      { q:"The main theme is…", options:["pollution","technology","sustainability","competition","tradition"], answer:2 }
+    ]
+  }
 ];
 
 /* ================= RENDER ================= */
 function renderQuestions() {
   const container = document.getElementById("questions");
   let html = "";
-  questions.forEach((q,i)=>{
-    html += `<div class="question"><p>${i+1}. ${q.q}</p>`;
-    q.options.forEach((o,j)=>{
-      html += `<label><input type="radio" name="q${i}" value="${j}"> ${o}</label><br>`;
+
+  passages.forEach((p,pi)=>{
+    html += `<div class="passage">${p.text}</div>`;
+    p.questions.forEach((q,qi)=>{
+      const index = pi*4 + qi;
+      html += `<div class="question"><p>${index+1}. ${q.q}</p>`;
+      q.options.forEach((o,j)=>{
+        html += `<label><input type="radio" name="q${index}" value="${j}"> ${o}</label><br>`;
+      });
+      html += `</div>`;
     });
-    html += `</div>`;
   });
+
   html += `<button type="button" onclick="selesai()">SELESAI UJIAN</button>`;
   container.innerHTML = html;
 }
@@ -130,30 +160,34 @@ function renderQuestions() {
 /* ================= SELESAI ================= */
 function selesai() {
   clearInterval(timerInterval);
-  clearExamStatus();
+  localStorage.removeItem("examStarted");
 
   let score = 0;
-  questions.forEach((q,i)=>{
-    const c = document.querySelector(`input[name="q${i}"]:checked`);
-    if (c && +c.value === q.answer) score++;
+  let index = 0;
+  passages.forEach(p=>{
+    p.questions.forEach(q=>{
+      const c = document.querySelector(`input[name="q${index}"]:checked`);
+      if (c && +c.value === q.answer) score++;
+      index++;
+    });
   });
 
   const fd = new FormData();
   fd.append("nama", document.getElementById("nama").value);
   fd.append("skor", score);
-  fd.append("total", questions.length);
+  fd.append("total", index);
 
   fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec", {
     method:"POST",
     body:fd
   })
-  .then(()=>alert("Ujian selesai!\nNilai: " + score))
+  .then(()=>alert("Ujian selesai\nNilai: "+score))
   .then(()=>location.reload())
   .catch(()=>alert("Gagal mengirim nilai"));
 }
 
 /* ================= RESUME ================= */
-if (localStorage.getItem("examStarted") === "yes") {
+if (localStorage.getItem("examStarted")==="yes") {
   document.getElementById("login").style.display="none";
   document.getElementById("quiz").classList.remove("hidden");
   renderQuestions();
