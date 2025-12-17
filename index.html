@@ -50,6 +50,15 @@
 let waktu = 60 * 60;
 let timerInterval;
 
+/* ================== CBT STORAGE ================== */
+function setExamStarted() {
+  localStorage.setItem("examStarted", "yes");
+}
+
+function clearExamStatus() {
+  localStorage.removeItem("examStarted");
+}
+
 /* ================== START UJIAN ================== */
 function start() {
   const nama = document.getElementById("nama").value.trim();
@@ -57,6 +66,8 @@ function start() {
     alert("Silakan masukkan nama terlebih dahulu");
     return;
   }
+
+  setExamStarted(); // ⬅️ KUNCI CBT (AMAN)
 
   document.getElementById("login").style.display = "none";
   document.getElementById("quiz").classList.remove("hidden");
@@ -149,39 +160,20 @@ function selesai() {
 
 // Cegah refresh / back
 window.onbeforeunload = function () {
-  return "Ujian sedang berlangsung.";
+  if (localStorage.getItem("examStarted") === "yes") {
+    return "Ujian sedang berlangsung.";
+  }
 };
 
-// Simpan status ujian
-function setExamStarted() {
-  localStorage.setItem("examStarted", "yes");
-}
-
-// Hapus status ujian
-function clearExamStatus() {
-  localStorage.removeItem("examStarted");
-}
-
-// Cek status ujian
-function checkExamStatus() {
+// Jika refresh saat ujian → lanjut
+window.onload = function () {
   if (localStorage.getItem("examStarted") === "yes") {
     document.getElementById("login").style.display = "none";
     document.getElementById("quiz").classList.remove("hidden");
     renderQuestions();
     startTimer();
   }
-}
-
-// Override start
-const originalStart = start;
-start = function () {
-  setExamStarted();
-  originalStart();
 };
-
-// Jalankan saat load
-checkExamStatus();
-
 </script>
 
 </body>
