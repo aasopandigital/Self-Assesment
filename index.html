@@ -94,47 +94,30 @@ function renderQuestions() {
 /* SELESAI UJIAN & FETCH DEBUG */
 function selesai() {
   clearInterval(timerInterval);
+  clearExamStatus();
 
   let score = 0;
-  questions.forEach((q,i)=>{
+  questions.forEach((q, i) => {
     const selected = document.querySelector(`input[name="q${i}"]:checked`);
-    if(selected && parseInt(selected.value)===q.answer) score++;
+    if (selected && parseInt(selected.value) === q.answer) score++;
   });
 
   const nama = document.getElementById("nama").value;
-  const payload = { nama: nama, skor: score, total: questions.length };
 
-  console.log("Payload yang dikirim:", payload);
+  const formData = new FormData();
+  formData.append("nama", nama);
+  formData.append("skor", score);
+  formData.append("total", questions.length);
 
-  fetch("https://script.google.com/macros/s/AKfycbyK6HaoN6caQRu90ygnjE8eAO4RNbKLDehiL_yVmX_PFM63TzXiSC1UBNFx4ToGkD_d6Q/exec", { // GANTI DENGAN URL WEB APP
+  fetch("PASTE_URL_WEB_APP_BARU_DI_SINI", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
+    body: formData
   })
-  .then(async res => {
-    console.log("HTTP status:", res.status);
-    const text = await res.text();
-    console.log("Raw response:", text);
-
-    try {
-      const data = JSON.parse(text);
-      console.log("Parsed JSON:", data);
-      if(data.status==="success"){
-        alert("Ujian selesai! Nilai kamu: "+score);
-      } else {
-        alert("Server error: "+data.message);
-      }
-    } catch(err){
-      console.error("Parsing error:", err);
-      alert("Response server tidak valid. Cek console.");
-    }
+  .then(() => {
+    alert("Ujian selesai!\nNilai kamu: " + score);
+    location.reload();
   })
-  .catch(err => {
-    console.error("Fetch error:", err);
-    alert("Gagal mengirim nilai. Cek console untuk detail.");
+  .catch(() => {
+    alert("Gagal mengirim nilai");
   });
 }
-</script>
-
-</body>
-</html>
