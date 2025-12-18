@@ -5,10 +5,9 @@
 <title>Ujian Bahasa Inggris</title>
 
 <style>
-body { font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }
+body { font-family: Arial; max-width: 900px; margin:auto; padding:20px; }
 .hidden { display:none; }
-#timer { color:red; font-weight:bold; margin-bottom:15px; }
-.question { margin-bottom:18px; }
+#timer { color:red; font-weight:bold; margin-bottom:20px; }
 .passage {
   background:#f4f4f4;
   padding:18px;
@@ -16,6 +15,7 @@ body { font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }
   border-left:5px solid #333;
   line-height:1.6;
 }
+.question { margin-bottom:18px; }
 button { padding:10px 20px; font-size:16px; cursor:pointer; }
 </style>
 </head>
@@ -42,10 +42,7 @@ let timerInterval;
 
 /* ===== START ===== */
 function start(){
-  if(!nama.value.trim()){
-    alert("Masukkan nama terlebih dahulu!");
-    return;
-  }
+  if(!nama.value.trim()){ alert("Masukkan nama!"); return; }
   localStorage.setItem("examStarted","yes");
   login.style.display="none";
   quiz.classList.remove("hidden");
@@ -56,104 +53,129 @@ function start(){
 /* ===== TIMER ===== */
 function startTimer(){
   timerInterval=setInterval(()=>{
-    let m=Math.floor(waktu/60);
-    let s=waktu%60;
+    let m=Math.floor(waktu/60), s=waktu%60;
     timer.innerText=`Sisa waktu: ${m}:${s<10?"0":""}${s}`;
     waktu--;
     if(waktu<0) selesai();
   },1000);
 }
 
-/* ===== TEKS & SOAL ===== */
-const passages=[
+/* ===== DATA ===== */
+const passages = [
+
+/* ===== TEXT 1 (8 SOAL) ===== */
 {
-text:`Learning styles vary significantly among students and influence how information is processed. Some learners understand concepts better through visual representations such as diagrams and charts, while others rely on listening and discussion to grasp ideas.
+text:`Learning styles vary among students and influence how information is processed.
+Some learners understand ideas better through visuals such as charts and diagrams,
+while others prefer listening and discussion.
 
-Awareness of personal learning preferences enables students to choose strategies that suit them best. When learners recognize how they learn most effectively, they are able to manage study time efficiently and focus on meaningful understanding.
+Understanding personal learning preferences allows students to select effective
+study strategies. When learners know how they learn best, they can manage time
+efficiently and focus on meaningful comprehension.
 
-Students who ignore their learning styles often experience frustration. They may spend long hours studying without achieving satisfying results because the methods used do not align with their needs.
+Students who ignore their learning styles often feel frustrated. They may spend
+many hours studying but achieve little because their methods do not suit them.
 
-Therefore, recognizing individual learning styles is essential for academic success, as it helps students maximize their potential and reduce unnecessary obstacles.`,
+Therefore, recognizing learning styles is essential for academic success because
+it helps students maximize potential and reduce unnecessary obstacles.`,
 q:[
-["The text mainly discusses…",["learning styles","exam systems","school rules","technology","teaching authority"],0],
-["Students learn more effectively when they…",["study longer","copy others","understand their preferences","avoid planning","use one method"],2],
-["Frustration occurs because students…",["lack teachers","use ineffective strategies","have no time","fail exams","are lazy"],1],
+["The text mainly discusses…",["learning styles","exam systems","school rules","technology","teachers"],0],
+["Students learn more effectively when they…",["study longer","copy others","know their preferences","avoid planning","use one method"],2],
+["Frustration occurs because students…",["lack teachers","use wrong strategies","have no time","fail exams","are lazy"],1],
 ["The writer’s tone is…",["critical","informative","emotional","negative","sarcastic"],1],
-["Which conclusion best fits the text?",["Learning styles are unimportant","Self-awareness improves learning","Teachers determine success","Time is irrelevant","Failure is inevitable"],1],
-["The paragraph implies that effective learning requires…",["talent","discipline","self-knowledge","luck","competition"],2],
-["Which behavior reflects the text?",["Imitating friends","Choosing suitable strategies","Ignoring weaknesses","Avoiding reflection","Studying randomly"],1],
-["The main benefit of learning awareness is…",["speed","confidence","efficiency","competition","memorization"],2]
+["Effective learning requires…",["luck","self-awareness","competition","speed","memorization"],1],
+["Which action fits the text?",["Imitating friends","Choosing suitable methods","Ignoring weaknesses","Avoiding reflection","Studying randomly"],1],
+["The benefit of learning awareness is…",["confidence","efficiency","pressure","competition","memorization"],1],
+["The best conclusion is…",["Style awareness improves learning","Time is irrelevant","Teachers decide success","Failure is useless","Effort is unimportant"],0]
 ]
 },
 
+/* ===== TEXT 2 (8 SOAL) ===== */
 {
-text:`Technology has transformed modern education by providing flexible access to information anytime and anywhere. Students can now learn independently using various digital platforms.
+text:`Technology has transformed modern education by providing flexible access to
+information anytime and anywhere. Students can learn independently using digital
+platforms and online resources.
 
-However, excessive reliance on technology may weaken critical thinking skills. When learners depend heavily on applications, they tend to accept information without questioning its validity.
+However, excessive reliance on technology may weaken critical thinking skills.
+When learners depend heavily on applications, they often accept information
+without questioning its validity.
 
-As a result, analytical abilities decline when students stop evaluating sources critically. This habit reduces independent reasoning and problem-solving skills.
+As a result, analytical abilities decline because students stop evaluating sources.
+This habit reduces independent reasoning and problem-solving skills.
 
-Therefore, technology should support learning rather than replace thinking processes, ensuring that students remain active thinkers.`,
+Therefore, technology should support learning rather than replace thinking
+processes so that students remain active and critical thinkers.`,
 q:[
-["The main idea of the text is…",["online exams","balanced technology use","digital failure","teacher roles","student laziness"],1],
+["The main idea is…",["online exams","balanced technology use","digital failure","teacher roles","student laziness"],1],
 ["Critical thinking decreases when students…",["analyze deeply","depend excessively","read books","discuss ideas","reflect"],1],
-["The word ‘excessive’ is closest in meaning to…",["limited","balanced","too much","controlled","minimal"],2],
-["The writer’s attitude toward technology is…",["negative","positive","balanced","emotional","unclear"],2],
-["Technology should be used to…",["replace teachers","avoid thinking","support learning","limit education","control students"],2],
-["The text implies that technology may cause…",["motivation","independence","passive learning","creativity","discipline"],2],
-["Which action matches the text?",["Blind acceptance","Source evaluation","Copying answers","Skipping study","Avoiding tools"],1]
+["The word ‘excessive’ means…",["limited","balanced","too much","controlled","minimal"],2],
+["The writer’s attitude is…",["negative","positive","balanced","emotional","unclear"],2],
+["Technology should be used to…",["replace teachers","support learning","avoid thinking","limit education","control students"],1],
+["The problem discussed is…",["lack of tools","passive learning","time limits","teacher absence","competition"],1],
+["Which behavior matches the text?",["Blind acceptance","Source evaluation","Copying answers","Skipping study","Avoiding tools"],1],
+["The paragraph suggests students should…",["depend fully on apps","question information","avoid technology","study less","memorize answers"],1]
 ]
 },
 
+/* ===== TEXT 3 (7 SOAL) ===== */
 {
-text:`Failure is often perceived negatively, causing students to feel discouraged. Many learners believe failure signals the end of success.
+text:`Failure is often viewed negatively and causes students to feel discouraged.
+Many learners believe failure signals the end of success.
 
-In reality, failure plays an essential role in learning. It allows individuals to identify weaknesses and adjust strategies accordingly.
+In reality, failure plays an important role in learning. It allows individuals
+to identify weaknesses and improve strategies.
 
-Students who reflect on their mistakes tend to develop resilience and deeper understanding. Reflection transforms failure into a learning opportunity.
+Students who reflect on mistakes develop resilience and deeper understanding.
+Reflection transforms failure into a valuable learning experience.
 
-Thus, failure should be viewed as a valuable process that contributes to personal and academic growth.`,
+Thus, failure should be accepted as a process that contributes to growth rather
+than something to be avoided.`,
 q:[
 ["Failure is described as…",["harmful","useless","a learning tool","a punishment","an ending"],2],
-["Students benefit from failure when they…",["ignore it","reflect on it","avoid risk","blame others","deny it"],1],
+["Students benefit when they…",["ignore failure","reflect on mistakes","avoid risks","blame others","deny problems"],1],
 ["Reflection leads to…",["fear","resilience","confusion","stress","delay"],1],
 ["The tone of the text is…",["hopeless","constructive","angry","fearful","neutral"],1],
-["Which statement best summarizes the text?",["Failure should be avoided","Failure builds learning","Failure ends progress","Failure causes shame","Failure shows weakness"],1],
-["The text encourages students to…",["give up","reflect","escape","copy others","avoid mistakes"],1],
-["Failure becomes meaningful when…",["forgotten","analyzed","hidden","blamed","ignored"],1]
+["The text encourages students to…",["give up","reflect","escape","copy others","avoid challenges"],1],
+["Failure becomes meaningful when it is…",["forgotten","analyzed","hidden","blamed","ignored"],1],
+["The best summary is…",["Failure ends learning","Failure builds growth","Failure causes shame","Failure shows weakness","Failure is useless"],1]
 ]
 },
 
+/* ===== TEXT 4 (7 SOAL) ===== */
 {
-text:`Environmental problems caused by human activities continue to increase globally. Pollution and resource exploitation threaten ecological balance.
+text:`Environmental problems caused by human activities continue to increase.
+Pollution and excessive resource use threaten ecological balance.
 
-Many environmental damages are irreversible, affecting future generations. Once destroyed, ecosystems are difficult to restore.
+Many environmental damages are irreversible and affect future generations.
+Once ecosystems are destroyed, recovery becomes extremely difficult.
 
-Education plays a crucial role in raising environmental awareness. Informed individuals are more likely to adopt sustainable behaviors.
+Education plays a key role in raising environmental awareness. Informed
+individuals are more likely to adopt sustainable behaviors.
 
-Therefore, sustainable development requires responsibility from all parties to protect the environment for the future.`,
+Therefore, protecting the environment requires responsibility and awareness
+from all members of society.`,
 q:[
 ["Irreversible means…",["temporary","permanent","avoidable","harmless","natural"],1],
 ["The best solution suggested is…",["punishment","education","technology only","delay","ignorance"],1],
-["The main theme of the text is…",["competition","economy","sustainability","industry","tradition"],2],
+["The main theme is…",["competition","economy","sustainability","industry","tradition"],2],
 ["Environmental awareness is built through…",["fear","education","delay","rules","technology alone"],1],
-["The text emphasizes responsibility toward…",["profit","nature","industry","competition","politics"],1],
 ["Future generations are mentioned to stress…",["urgency","tradition","economy","technology","history"],0],
+["The text emphasizes responsibility toward…",["profit","nature","industry","competition","politics"],1],
 ["The overall message promotes…",["exploitation","balance","growth","speed","control"],1]
 ]
 }
+
 ];
 
 /* ===== RENDER ===== */
 function renderQuestions(){
-  let html="";
-  let n=0;
+  let html="", no=0;
   passages.forEach(p=>{
     html+=`<div class="passage">${p.text}</div>`;
     p.q.forEach(item=>{
-      html+=`<div class="question"><p>${++n}. ${item[0]}</p>`;
+      html+=`<div class="question"><p>${++no}. ${item[0]}</p>`;
       item[1].forEach((o,i)=>{
-        html+=`<label><input type="radio" name="q${n}" value="${i}"> ${String.fromCharCode(65+i)}. ${o}</label><br>`;
+        html+=`<label><input type="radio" name="q${no}" value="${i}"> ${String.fromCharCode(65+i)}. ${o}</label><br>`;
       });
       html+=`</div>`;
     });
@@ -179,8 +201,8 @@ function selesai(){
   fd.append("skor",score);
   fd.append("total",no);
   fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec",{method:"POST",body:fd})
-  .then(()=>alert("Ujian selesai\nNilai: "+score))
-  .then(()=>location.reload());
+    .then(()=>alert("Ujian selesai\nNilai: "+score))
+    .then(()=>location.reload());
 }
 
 /* ===== RESUME ===== */
