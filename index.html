@@ -5,18 +5,18 @@
 <title>Ujian Bahasa Inggris</title>
 
 <style>
-body { font-family: Arial; max-width: 900px; margin:auto; padding:20px; }
+body { font-family: Arial; max-width: 900px; margin: auto; padding: 20px; }
 .hidden { display:none; }
-#timer { color:red; font-weight:bold; margin-bottom:20px; }
+#timer { color:red; font-weight:bold; margin-bottom:15px; }
 .passage {
   background:#f4f4f4;
-  padding:18px;
-  margin:25px 0;
+  padding:20px;
+  margin:20px 0;
   border-left:5px solid #333;
   line-height:1.6;
 }
 .question { margin-bottom:18px; }
-button { padding:10px 20px; font-size:16px; cursor:pointer; }
+button { padding:10px 25px; font-size:16px; cursor:pointer; }
 </style>
 </head>
 
@@ -24,6 +24,7 @@ button { padding:10px 20px; font-size:16px; cursor:pointer; }
 
 <h2>Ujian Bahasa Inggris</h2>
 
+<!-- LOGIN -->
 <div id="login">
   <p>Masukkan nama sebelum mulai:</p>
   <input type="text" id="nama">
@@ -31,6 +32,7 @@ button { padding:10px 20px; font-size:16px; cursor:pointer; }
   <button onclick="start()">MULAI UJIAN</button>
 </div>
 
+<!-- QUIZ -->
 <div id="quiz" class="hidden">
   <div id="timer"></div>
   <div id="questions"></div>
@@ -40,179 +42,166 @@ button { padding:10px 20px; font-size:16px; cursor:pointer; }
 let waktu = 3600;
 let timerInterval;
 
-/* ===== START ===== */
+/* START */
 function start(){
-  if(!nama.value.trim()){ alert("Masukkan nama!"); return; }
+  if(!document.getElementById("nama").value.trim()){
+    alert("Masukkan nama terlebih dahulu!");
+    return;
+  }
   localStorage.setItem("examStarted","yes");
-  login.style.display="none";
-  quiz.classList.remove("hidden");
-  renderQuestions();
+  document.getElementById("login").style.display="none";
+  document.getElementById("quiz").classList.remove("hidden");
+  render();
   startTimer();
 }
 
-/* ===== TIMER ===== */
+/* TIMER */
 function startTimer(){
   timerInterval=setInterval(()=>{
-    let m=Math.floor(waktu/60), s=waktu%60;
-    timer.innerText=`Sisa waktu: ${m}:${s<10?"0":""}${s}`;
+    let m=Math.floor(waktu/60);
+    let s=waktu%60;
+    document.getElementById("timer").innerText=
+      `Sisa waktu: ${m}:${s<10?"0":""}${s}`;
     waktu--;
     if(waktu<0) selesai();
   },1000);
 }
 
-/* ===== DATA ===== */
-const passages = [
-
-/* ===== TEXT 1 (8 SOAL) ===== */
+/* DATA */
+const data = [
 {
-text:`Learning styles vary among students and influence how information is processed.
-Some learners understand ideas better through visuals such as charts and diagrams,
-while others prefer listening and discussion.
+text:`
+Learning styles vary among students and influence how effectively they absorb information. Some learners understand material better through visual aids, while others prefer listening or hands-on practice.
 
-Understanding personal learning preferences allows students to select effective
-study strategies. When learners know how they learn best, they can manage time
-efficiently and focus on meaningful comprehension.
+Students who recognize their learning preferences tend to study more efficiently. They can choose suitable strategies and avoid frustration caused by ineffective methods.
 
-Students who ignore their learning styles often feel frustrated. They may spend
-many hours studying but achieve little because their methods do not suit them.
+Without awareness of learning styles, students may waste time using approaches that do not suit them. This often leads to lower motivation and poor academic performance.
 
-Therefore, recognizing learning styles is essential for academic success because
-it helps students maximize potential and reduce unnecessary obstacles.`,
-q:[
-["The text mainly discusses…",["learning styles","exam systems","school rules","technology","teachers"],0],
-["Students learn more effectively when they…",["study longer","copy others","know their preferences","avoid planning","use one method"],2],
-["Frustration occurs because students…",["lack teachers","use wrong strategies","have no time","fail exams","are lazy"],1],
-["The writer’s tone is…",["critical","informative","emotional","negative","sarcastic"],1],
-["Effective learning requires…",["luck","self-awareness","competition","speed","memorization"],1],
-["Which action fits the text?",["Imitating friends","Choosing suitable methods","Ignoring weaknesses","Avoiding reflection","Studying randomly"],1],
-["The benefit of learning awareness is…",["confidence","efficiency","pressure","competition","memorization"],1],
-["The best conclusion is…",["Style awareness improves learning","Time is irrelevant","Teachers decide success","Failure is useless","Effort is unimportant"],0]
+Therefore, understanding personal learning styles helps students maximize potential and improve learning outcomes.
+`,
+questions:[
+["The main idea of the text is…",["learning methods","learning styles","school rules","teacher roles","exam systems"],1],
+["Students benefit when they…",["copy others","study longer","understand themselves","avoid planning","change teachers"],2],
+["Ineffective strategies may cause…",["success","wasted time","confidence","discipline","focus"],1],
+["The tone of the text is…",["critical","informative","negative","emotional","sarcastic"],1],
+["The text emphasizes the importance of…",["technology","self-awareness","competition","rules","talent"],1],
+["The word ‘maximize’ is closest to…",["reduce","limit","increase","avoid","ignore"],2],
+["Students fail mainly because they…",["lack talent","ignore learning style","study too much","use technology","ask teachers"],1],
+["The best title is…",["Teaching Methods","Effective Learning","Exam Systems","Student Failure","School Discipline"],1]
 ]
 },
 
-/* ===== TEXT 2 (8 SOAL) ===== */
 {
-text:`Technology has transformed modern education by providing flexible access to
-information anytime and anywhere. Students can learn independently using digital
-platforms and online resources.
+text:`
+Technology has transformed modern education by providing flexible access to information anytime and anywhere. Online resources allow students to learn beyond classroom boundaries.
 
-However, excessive reliance on technology may weaken critical thinking skills.
-When learners depend heavily on applications, they often accept information
-without questioning its validity.
+However, excessive reliance on technology may weaken students’ critical thinking skills. When answers are instantly available, learners may stop questioning information.
 
-As a result, analytical abilities decline because students stop evaluating sources.
-This habit reduces independent reasoning and problem-solving skills.
+As a result, analytical abilities decline when students accept information without evaluation. Learning becomes passive rather than reflective.
 
-Therefore, technology should support learning rather than replace thinking
-processes so that students remain active and critical thinkers.`,
-q:[
-["The main idea is…",["online exams","balanced technology use","digital failure","teacher roles","student laziness"],1],
-["Critical thinking decreases when students…",["analyze deeply","depend excessively","read books","discuss ideas","reflect"],1],
-["The word ‘excessive’ means…",["limited","balanced","too much","controlled","minimal"],2],
-["The writer’s attitude is…",["negative","positive","balanced","emotional","unclear"],2],
-["Technology should be used to…",["replace teachers","support learning","avoid thinking","limit education","control students"],1],
-["The problem discussed is…",["lack of tools","passive learning","time limits","teacher absence","competition"],1],
-["Which behavior matches the text?",["Blind acceptance","Source evaluation","Copying answers","Skipping study","Avoiding tools"],1],
-["The paragraph suggests students should…",["depend fully on apps","question information","avoid technology","study less","memorize answers"],1]
+Therefore, technology should support learning, not replace thinking processes.
+`,
+questions:[
+["The text mainly discusses…",["technology use","online schools","teacher roles","internet dangers","student laziness"],0],
+["Technology is beneficial when it…",["replaces teachers","limits thinking","supports learning","controls students","avoids discussion"],2],
+["Critical thinking decreases when students…",["read books","discuss ideas","depend excessively","practice skills","ask questions"],2],
+["The word ‘excessive’ means…",["balanced","limited","too much","minimal","careful"],2],
+["Learning becomes passive when students…",["evaluate information","question ideas","accept answers blindly","analyze data","discuss"],2],
+["The writer’s attitude is…",["negative","positive","balanced","unclear","emotional"],2],
+["The last paragraph suggests that…",["technology is harmful","thinking is essential","schools are outdated","teachers are useless","learning is easy"],1],
+["The best conclusion is…",["avoid technology","limit education","use technology wisely","depend fully","ignore internet"],2]
 ]
 },
 
-/* ===== TEXT 3 (7 SOAL) ===== */
 {
-text:`Failure is often viewed negatively and causes students to feel discouraged.
-Many learners believe failure signals the end of success.
+text:`
+Failure is often seen as something negative, yet it plays an essential role in learning. Through failure, individuals recognize weaknesses.
 
-In reality, failure plays an important role in learning. It allows individuals
-to identify weaknesses and improve strategies.
+Students who reflect on mistakes improve their strategies and gain deeper understanding. Reflection turns failure into valuable experience.
 
-Students who reflect on mistakes develop resilience and deeper understanding.
-Reflection transforms failure into a valuable learning experience.
+Avoiding challenges prevents growth and reduces resilience. Those who fear failure miss opportunities to learn.
 
-Thus, failure should be accepted as a process that contributes to growth rather
-than something to be avoided.`,
-q:[
-["Failure is described as…",["harmful","useless","a learning tool","a punishment","an ending"],2],
-["Students benefit when they…",["ignore failure","reflect on mistakes","avoid risks","blame others","deny problems"],1],
-["Reflection leads to…",["fear","resilience","confusion","stress","delay"],1],
-["The tone of the text is…",["hopeless","constructive","angry","fearful","neutral"],1],
-["The text encourages students to…",["give up","reflect","escape","copy others","avoid challenges"],1],
-["Failure becomes meaningful when it is…",["forgotten","analyzed","hidden","blamed","ignored"],1],
-["The best summary is…",["Failure ends learning","Failure builds growth","Failure causes shame","Failure shows weakness","Failure is useless"],1]
+Thus, failure should be viewed as a learning tool rather than an end.
+`,
+questions:[
+["Failure is described as…",["harmful","useless","a learning tool","an ending","a weakness"],2],
+["Students benefit from failure when they…",["ignore it","reflect","blame others","give up","avoid risk"],1],
+["The word ‘resilience’ refers to…",["fear","strength","confusion","delay","weakness"],1],
+["Avoiding challenges leads to…",["growth","success","stagnation","motivation","confidence"],2],
+["The tone of the text is…",["fearful","constructive","angry","hopeless","neutral"],1],
+["Failure helps students to…",["avoid study","improve strategies","lose confidence","skip effort","copy others"],1],
+["The writer encourages students to…",["fear mistakes","avoid failure","learn from failure","deny errors","compete"],2]
 ]
 },
 
-/* ===== TEXT 4 (7 SOAL) ===== */
 {
-text:`Environmental problems caused by human activities continue to increase.
-Pollution and excessive resource use threaten ecological balance.
+text:`
+Environmental problems caused by human activities continue to increase globally. Pollution and deforestation disrupt ecological balance.
 
-Many environmental damages are irreversible and affect future generations.
-Once ecosystems are destroyed, recovery becomes extremely difficult.
+Many forms of environmental damage are irreversible and threaten future generations. Once ecosystems collapse, recovery becomes difficult.
 
-Education plays a key role in raising environmental awareness. Informed
-individuals are more likely to adopt sustainable behaviors.
+Education plays a crucial role in raising awareness and encouraging sustainable behavior. Knowledge influences responsible decision-making.
 
-Therefore, protecting the environment requires responsibility and awareness
-from all members of society.`,
-q:[
-["Irreversible means…",["temporary","permanent","avoidable","harmless","natural"],1],
-["The best solution suggested is…",["punishment","education","technology only","delay","ignorance"],1],
-["The main theme is…",["competition","economy","sustainability","industry","tradition"],2],
-["Environmental awareness is built through…",["fear","education","delay","rules","technology alone"],1],
+Therefore, environmental protection requires collective responsibility and immediate action.
+`,
+questions:[
+["The main issue discussed is…",["technology","education","environment","economy","culture"],2],
+["Irreversible damage means…",["temporary","avoidable","permanent","harmless","natural"],2],
 ["Future generations are mentioned to stress…",["urgency","tradition","economy","technology","history"],0],
-["The text emphasizes responsibility toward…",["profit","nature","industry","competition","politics"],1],
+["Education helps people to…",["ignore nature","act responsibly","delay action","depend on others","avoid policy"],1],
+["Collective responsibility means…",["government only","everyone involved","individual choice","future duty","no action"],1],
+["Immediate action is needed because…",["damage continues","nature recovers","technology solves it","time is unlimited","rules fail"],0],
 ["The overall message promotes…",["exploitation","balance","growth","speed","control"],1]
 ]
 }
-
 ];
 
-/* ===== RENDER ===== */
-function renderQuestions(){
-  let html="", no=0;
-  passages.forEach(p=>{
-    html+=`<div class="passage">${p.text}</div>`;
-    p.q.forEach(item=>{
-      html+=`<div class="question"><p>${++no}. ${item[0]}</p>`;
-      item[1].forEach((o,i)=>{
-        html+=`<label><input type="radio" name="q${no}" value="${i}"> ${String.fromCharCode(65+i)}. ${o}</label><br>`;
+/* RENDER */
+function render(){
+  let html="";
+  let qIndex=0;
+  data.forEach(block=>{
+    html+=`<div class="passage">${block.text}</div>`;
+    block.questions.forEach(q=>{
+      html+=`<div class="question"><p>${++qIndex}. ${q[0]}</p>`;
+      q[1].forEach((o,i)=>{
+        html+=`<label><input type="radio" name="q${qIndex}" value="${i}"> ${String.fromCharCode(65+i)}. ${o}</label><br>`;
       });
       html+=`</div>`;
     });
   });
   html+=`<button onclick="selesai()">SELESAI UJIAN</button>`;
-  questions.innerHTML=html;
+  document.getElementById("questions").innerHTML=html;
 }
 
-/* ===== SELESAI ===== */
+/* FINISH */
 function selesai(){
   clearInterval(timerInterval);
   localStorage.removeItem("examStarted");
-  let score=0,no=0;
-  passages.forEach(p=>{
-    p.q.forEach(item=>{
-      no++;
-      const c=document.querySelector(`input[name="q${no}"]:checked`);
-      if(c && +c.value===item[2]) score++;
+  let score=0, idx=0;
+  data.forEach(b=>{
+    b.questions.forEach(q=>{
+      const c=document.querySelector(`input[name="q${++idx}"]:checked`);
+      if(c && +c.value===q[2]) score++;
     });
   });
+
   const fd=new FormData();
-  fd.append("nama",nama.value);
+  fd.append("nama",document.getElementById("nama").value);
   fd.append("skor",score);
-  fd.append("total",no);
+  fd.append("total",idx);
+
   fetch("https://script.google.com/macros/s/AKfycbxEFXvRa3q4qfPyU_q5LnHXtYlH7w3slGKMukQ8DV9RtRxiPY8gIkIJrVtrRdOUQm36TQ/exec",{method:"POST",body:fd})
-    .then(()=>alert("Ujian selesai\nNilai: "+score))
-    .then(()=>location.reload());
+  .then(()=>alert("Ujian selesai\nNilai: "+score))
+  .then(()=>location.reload());
 }
 
-/* ===== RESUME ===== */
+/* RESUME */
 if(localStorage.getItem("examStarted")==="yes"){
-  login.style.display="none";
-  quiz.classList.remove("hidden");
-  renderQuestions();
-  startTimer();
+  document.getElementById("login").style.display="none";
+  document.getElementById("quiz").classList.remove("hidden");
+  render(); startTimer();
 }
 </script>
-
 </body>
 </html>
